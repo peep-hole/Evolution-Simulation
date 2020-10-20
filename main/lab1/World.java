@@ -1,4 +1,4 @@
-package agh.cs.lab1;
+package main.lab1;
 import static java.lang.System.out;
 
 public class World {
@@ -76,6 +76,28 @@ public class World {
 //        run(tmp);
         Directions[] route = convert(args);
         run(route);
-        out.print("Stop");
+        out.println("Stop");
+        Vector2d position1 = new Vector2d(1,2);
+        System.out.println(position1);
+        Vector2d position2 = new Vector2d(-2,1);
+        System.out.println(position2);
+        System.out.println(position1.add(position2));
+
+//        TEST pkt8.
+
+//     MapDirection test1 = MapDirection.NORTH;
+//     MapDirection test2 = test1.next();
+//     MapDirection test3 = test1.previous();
+//     Vector2d testV = test1.toUnitVector();
+//     out.println(test1);
+//     out.println(test2);
+//     out.println(test3);
+//     out.println(test1.toString());
+//     out.println(testV);
+//     out.print(testV.toString());
+
+
+
+
     }
 }
