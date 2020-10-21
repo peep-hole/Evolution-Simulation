@@ -14,7 +14,7 @@ public enum MapDirection {
             case EAST:
                 return "Wschód";
         }
-        return "NoSuchDirection";
+        return "NoSuchDirection";   // zwrócenie prawidłowego napisu w bardzo nieprawidłowej sytuacji to zły pomysł - trudno wytropić błąd
     }
     public MapDirection next(){
         switch(this){
@@ -53,7 +53,7 @@ public enum MapDirection {
             case NORTH:
                 return new Vector2d(0,1);
         }
-        return new Vector2d(0,0);
+        return new Vector2d(0,0);   // analogicznie do toString
     }
 
 

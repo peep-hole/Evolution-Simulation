@@ -1,4 +1,4 @@
-package test;
+package test;   // powinien być pakiet jak w main, a test to folder
 
 import main.lab1.Vector2d;
 
@@ -10,7 +10,7 @@ public class Vector2dTest {
     //equalsTest
 
     @Test
-    public void equalTest1(){
+    public void equalTest1(){   // lepiej testy jednej metody "produkcyjnej" trzymać w jednej metodzie
         Assert.assertEquals(new Vector2d(1,2), new Vector2d(1, 2));
     }
 

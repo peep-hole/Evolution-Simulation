@@ -1,8 +1,8 @@
-package main.lab1;
+package main.lab1;  // main nie miał być pakietem, tylko folderem
 
 public class Vector2d {
 
-    public int x;
+    public int x;   // x i y miały być finalne
     public int y;
 
     public Vector2d(int x, int y){
@@ -60,6 +60,6 @@ public class Vector2d {
 
     public Vector2d opposite(){
         return new Vector2d(this.y, this.x);
-    }
+    }   // wektor przeciwny to (-x, -y), nie (y, x)
 
 }
