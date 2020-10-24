@@ -113,6 +113,5 @@ public class World {
 //        moveAlong(args, kitty);
 //        out.println(kitty);
 
-
     }
 }
