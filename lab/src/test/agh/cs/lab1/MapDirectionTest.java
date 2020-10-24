@@ -1,5 +1,5 @@
-package test;
-import main.lab1.MapDirection;
+package agh.cs.lab1;
+import agh.cs.lab1.MapDirection;
 
 import org.junit.*;
 

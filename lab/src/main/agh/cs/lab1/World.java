@@ -1,4 +1,4 @@
-package main.lab1;
+package agh.cs.lab1;
 import static java.lang.System.out;
 
 public class World {
@@ -70,18 +70,27 @@ public class World {
         }
         return route;
     }
+
+    public static void moveAlong(String[] pathToConvert, Animal beast){
+        int i = 0;
+        MoveDirection[] path = OptionParser.parse(pathToConvert);
+        while((i< path.length)&&(path[i] != null)) {
+            beast.move(path[i++]);
+        }
+    }
+
     public static void main(String[] args){
-        out.println("Start");
+//        out.println("Start");
 //        String[] tmp = {"f", "l"};
 //        run(tmp);
-        Directions[] route = convert(args);
-        run(route);
-        out.println("Stop");
-        Vector2d position1 = new Vector2d(1,2);
-        System.out.println(position1);
-        Vector2d position2 = new Vector2d(-2,1);
-        System.out.println(position2);
-        System.out.println(position1.add(position2));
+//        Directions[] route = convert(args);
+//        run(route);
+//        out.println("Stop");
+//        Vector2d position1 = new Vector2d(1,2);
+//        System.out.println(position1);
+//        Vector2d position2 = new Vector2d(-2,1);
+//        System.out.println(position2);
+//        System.out.println(position1.add(position2));
 
 //        TEST pkt8.
 
@@ -97,6 +106,12 @@ public class World {
 //     out.print(testV.toString());
 
 
+
+
+
+//        Animal kitty = new Animal();
+//        moveAlong(args, kitty);
+//        out.println(kitty);
 
 
     }

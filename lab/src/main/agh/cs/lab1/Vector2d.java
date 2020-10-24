@@ -1,9 +1,9 @@
-package main.lab1;
+package agh.cs.lab1;
 
 public class Vector2d {
 
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
 
     public Vector2d(int x, int y){
 
@@ -59,7 +59,7 @@ public class Vector2d {
     }
 
     public Vector2d opposite(){
-        return new Vector2d(this.y, this.x);
+        return new Vector2d((-1) * this.x, (-1) * this.y);
     }
 
 }
