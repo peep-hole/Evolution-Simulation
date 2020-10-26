@@ -1,8 +1,8 @@
 package agh.cs.lab1;
-import agh.cs.lab1.OptionParser;
-import agh.cs.lab1.World;
 
 import org.junit.*;
+
+import java.util.Arrays;
 
 public class AnimalTest {
 
@@ -26,6 +26,13 @@ public class AnimalTest {
         for(int i = 0; i < x2.length; i++){
             Assert.assertEquals(x2[i], ny2[i]);
         }
+
+        // Test 3
+
+        MoveDirection[] x3 = {MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.RIGHT, null, null, null};
+        String[] y3 = {"right", "null", "null", "null", "null", "r"};
+        MoveDirection[] ny3 = OptionParser.parse(y3);
+        Assert.assertFalse(Arrays.equals(x3,ny3));
 
     }
 
@@ -59,6 +66,21 @@ public class AnimalTest {
 
         Assert.assertEquals("Position: (0, 0),  Orientation: Południe", rabbit2.toString());
 
+        // Test3
+
+        Animal rabbit3 = new Animal();
+
+        rabbit3.move(MoveDirection.LEFT);
+        rabbit3.move(MoveDirection.FORWARD);
+        rabbit3.move(MoveDirection.BACKWARD);
+        rabbit3.move(MoveDirection.FORWARD);
+        rabbit3.move(MoveDirection.LEFT);
+        rabbit3.move(MoveDirection.LEFT);
+        rabbit3.move(MoveDirection.FORWARD);
+        rabbit3.move(MoveDirection.LEFT);
+
+        Assert.assertNotEquals("Position: (0, 0),  Orientation: Południe", rabbit3.toString());
+
     }
 
     @Test
@@ -87,6 +109,14 @@ public class AnimalTest {
         World.moveAlong(path3, rat3);
 
         Assert.assertEquals("Position: (1, 2),  Orientation: Południe", rat3.toString());
+
+        // Test4
+
+        Animal rat4 = new Animal();
+        String[] path4 = {"l", "l", "r", "l", "l", "l" , "r" ,"l", " l ", "r", "r", "r"};
+        World.moveAlong(path4, rat4);
+
+        Assert.assertNotEquals("Position: (1, 2),  Orientation: Południe", rat4.toString());
     }
 
 }

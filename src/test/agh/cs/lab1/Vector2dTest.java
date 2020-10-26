@@ -1,9 +1,6 @@
 package agh.cs.lab1;
 
-import agh.cs.lab1.Vector2d;
-
 import org.junit.*;
-
 
 
 public class Vector2dTest {
