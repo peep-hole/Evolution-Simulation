@@ -14,7 +14,7 @@ public class AnimalTest {
         MoveDirection[] x1 = {MoveDirection.LEFT, MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.RIGHT};
         String[] y1 = {"l", "forward", "b", "r"};
         MoveDirection[] ny1 = OptionParser.parse(y1);
-        for(int i = 0; i < x1.length; i++){
+        for(int i = 0; i < x1.length; i++){ // assertArrayEquals
             Assert.assertEquals(x1[i], ny1[i]);
         }
 
