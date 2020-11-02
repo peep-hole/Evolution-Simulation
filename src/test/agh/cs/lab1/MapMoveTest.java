@@ -80,6 +80,5 @@ public class MapMoveTest {
         Assert.assertEquals(map2.toString(), checkMap2.toString());
 
 
-        //Assert.assertEquals(map2.toString(), checkMap2.toString());
     }
 }
