@@ -68,7 +68,7 @@ public class AnimalTest {
         rabbit2.move(MoveDirection.FORWARD);
         rabbit2.move(MoveDirection.FORWARD);
 
-        Assert.assertEquals("(0, 0)v", rabbit2.getPosition() + rabbit2.toString());
+        Assert.assertEquals("(0, 0)v", rabbit2.getPosition() + rabbit2.toString()); // skoro Pan ma getPosition, to nie lepiej to porównać z wektorem, a nie Stringiem?
 
         // Test3
 

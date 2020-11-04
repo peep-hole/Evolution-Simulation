@@ -16,7 +16,7 @@ public class Animal{
         }
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition){
+    public Animal(IWorldMap map, Vector2d initialPosition){ // DRY
         orientation = MapDirection.NORTH;
         position = initialPosition;
         this.map = map;
@@ -51,7 +51,7 @@ public class Animal{
                 break;
 
             case FORWARD:
-                Vector2d tmp1 = position.add(orientation.toUnitVector()); // temporary position
+                Vector2d tmp1 = position.add(orientation.toUnitVector()); // temporary position // słaba nazwa, skoro ją Pan musi skomentować
                 if(map.canMoveTo(tmp1)){
                     position = tmp1;
                 }
