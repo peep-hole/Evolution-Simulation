@@ -3,6 +3,7 @@ package agh.cs.lab1;
 import org.junit.*;
 
 import java.util.Arrays;
+import java.util.Vector;
 
 public class AnimalTest {
 
@@ -52,7 +53,8 @@ public class AnimalTest {
         rabbit1.move(MoveDirection.FORWARD);
         rabbit1.move(MoveDirection.LEFT);
 
-        Assert.assertEquals("(4, 2)^",rabbit1.getPosition() + rabbit1.toString());
+        Assert.assertEquals(new Vector2d(4, 2),rabbit1.getPosition());
+        Assert.assertEquals("^",rabbit1.toString());
 
         // Test2
 
@@ -68,7 +70,8 @@ public class AnimalTest {
         rabbit2.move(MoveDirection.FORWARD);
         rabbit2.move(MoveDirection.FORWARD);
 
-        Assert.assertEquals("(0, 0)v", rabbit2.getPosition() + rabbit2.toString());
+        Assert.assertEquals(new Vector2d(0, 0), rabbit2.getPosition());
+        Assert.assertEquals("v",rabbit2.toString());
 
         // Test3
 
@@ -84,7 +87,8 @@ public class AnimalTest {
         rabbit3.move(MoveDirection.FORWARD);
         rabbit3.move(MoveDirection.LEFT);
 
-        Assert.assertNotEquals("(0, 0)v", rabbit3.getPosition() + rabbit3.toString());
+        Assert.assertNotEquals(new Vector2d(0, 0), rabbit3.getPosition());
+        Assert.assertNotEquals("v",rabbit3.toString());
 
     }
 
@@ -100,7 +104,8 @@ public class AnimalTest {
         String[] path1 = {"f", "f", "ff", "forward", "l", "l,left", "left", "b", "f", "f", "forward", "f", "f", "b", "l", "bagwart", "backward"};
         World.moveAlong(path1, rat1);
 
-        Assert.assertEquals("(1, 1)>", rat1.getPosition() + rat1.toString());
+        Assert.assertEquals(new Vector2d(1, 1), rat1.getPosition());
+        Assert.assertEquals(">",rat1.toString());
 
         // Test2
 
@@ -109,7 +114,8 @@ public class AnimalTest {
         String[] path2 = {"f", "i", "f", "right", "f", "r", "back", "backward", "lewt", "left", "ahead", "f", "f","r" ," s" , "f"};
         World.moveAlong(path2, rat2);
 
-        Assert.assertEquals("(4, 3)v", rat2.getPosition() + rat2.toString());
+        Assert.assertEquals(new Vector2d(4, 3), rat2.getPosition());
+        Assert.assertEquals("v",rat2.toString());
 
         // Test3
 
@@ -118,7 +124,8 @@ public class AnimalTest {
         String[] path3 = {"l", "l", "l", "l", "l", "l" , "f" ,"l", " l ", "b", "r", "b"};
         World.moveAlong(path3, rat3);
 
-        Assert.assertEquals("(1, 2)v", rat3.getPosition() + rat3.toString());
+        Assert.assertEquals(new Vector2d(1, 2), rat3.getPosition());
+        Assert.assertEquals("v",rat3.toString());
 
         // Test4
 
@@ -127,7 +134,8 @@ public class AnimalTest {
         String[] path4 = {"l", "l", "r", "l", "l", "l" , "r" ,"l", " l ", "r", "r", "r"};
         World.moveAlong(path4, rat4);
 
-        Assert.assertNotEquals("(1, 2)v", rat4.getPosition() + rat4.toString());
+        Assert.assertNotEquals(new Vector2d(1, 2), rat4.getPosition());
+        Assert.assertNotEquals("v",rat4.toString());
     }
 
 }

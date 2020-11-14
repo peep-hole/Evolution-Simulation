@@ -1,28 +1,27 @@
 package agh.cs.lab1;
 
-public class Animal{
+public class Animal implements IMapElement{
 
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
 
+    private Animal(IWorldMap map, MapDirection direction, Vector2d position) {
+        orientation = direction;
+        this.map = map;
+        this.position = position;
+        if(!this.map.place(this)) {
+            throw new IllegalStateException("Position " + position + " is occupied or out of map!");
+        }
+
+    }
 
     public Animal(IWorldMap map){
-        orientation = MapDirection.NORTH;
-        position = new Vector2d(2, 2);
-        this.map = map;
-        if(!this.map.place(this)) {
-            throw new IllegalStateException("Position " + position + " is occupied!");
-        }
+        this(map, MapDirection.NORTH, new Vector2d(2, 2));
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition){
-        orientation = MapDirection.NORTH;
-        position = initialPosition;
-        this.map = map;
-        if(!this.map.place(this)) {
-            throw new IllegalStateException("Position " + position + " is occupied!");
-        }
+        this(map, MapDirection.NORTH, initialPosition);
     }
 
     public Vector2d getPosition() {
@@ -51,16 +50,16 @@ public class Animal{
                 break;
 
             case FORWARD:
-                Vector2d tmp1 = position.add(orientation.toUnitVector()); // temporary position
-                if(map.canMoveTo(tmp1)){
-                    position = tmp1;
+                Vector2d wantedPlace1 = position.add(orientation.toUnitVector());
+                if(map.canMoveTo(wantedPlace1)){
+                    position = wantedPlace1;
                 }
                 break;
 
             case BACKWARD:
-                Vector2d tmp2 = position.add((orientation.toUnitVector()).opposite()); // temporary position
-                if(map.canMoveTo(tmp2)){
-                    position = tmp2;
+                Vector2d wantedPlace2 = position.add((orientation.toUnitVector()).opposite());
+                if(map.canMoveTo(wantedPlace2)){
+                    position = wantedPlace2;
                 }
                 break;
             default: throw new IllegalArgumentException();
