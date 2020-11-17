@@ -6,11 +6,7 @@ abstract class AbstractWorldMap implements IWorldMap {
 
     protected List<Animal> animals;
 
-    protected Vector2d lowerLeftCorner;
-    protected Vector2d upperRightCorner;
-
     protected MapVisualizer mapVisualizer = new MapVisualizer(this);
-
 
     @Override
     public boolean place(Animal animal) {
@@ -22,19 +18,22 @@ abstract class AbstractWorldMap implements IWorldMap {
         return true;
     }
 
+    public abstract Vector2d getUpperRightCorner();
+    public abstract Vector2d getLowerLeftCorner();
+
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return(!isOccupied(position));
+        return(!(objectAt(position) instanceof Animal));
     }
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return objectAt(position) instanceof Animal;
+        return objectAt(position) != null;
     }
 
     @Override
     public String toString() {
-        return mapVisualizer.draw(lowerLeftCorner, upperRightCorner);
+      return this.mapVisualizer.draw(getLowerLeftCorner(),getUpperRightCorner());
     }
 
     @Override

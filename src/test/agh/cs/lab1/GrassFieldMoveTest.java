@@ -38,7 +38,7 @@ public class GrassFieldMoveTest {
     @Test
     public void grassFieldTest2() {
 
-        GrassField map2 = new GrassField(0);
+        GrassField map2 = new GrassField(10);
         String[] path2 = {"b", "f", "b", "f", "b", "f", "b", "f", "b", "f", "b", "f", "b", "f", "b", "f", "b", "f"};
         Vector2d[] animals2 = {new Vector2d(0, 0), new Vector2d(10, 10)};
         SimulationEngine engine2 = new SimulationEngine(OptionParser.parse(path2), map2, animals2);
@@ -150,6 +150,28 @@ public class GrassFieldMoveTest {
 
         Assert.assertTrue(thrown2);
 
+    }
+
+    @Test
+    public void mapSizeTest() {
+        GrassField map1 = new GrassField(0);
+
+        // Test 1
+
+        Animal rat1 = new Animal(map1, new Vector2d(15,12));
+        Animal cat1 = new Animal(map1, new Vector2d(-21,-18));
+
+        Assert.assertEquals(map1.getUpperRightCorner(),rat1.getPosition());
+        Assert.assertEquals(map1.getLowerLeftCorner(), cat1.getPosition());
+
+        // Test 2
+
+        GrassField map2 = new GrassField(0);
+        Animal rat2 = new Animal(map2, new Vector2d(70,0));
+        Animal cat2 = new Animal(map2, new Vector2d(0,-112));
+
+        Assert.assertEquals(map2.getUpperRightCorner(),rat2.getPosition());
+        Assert.assertEquals(map2.getLowerLeftCorner(), cat2.getPosition());
     }
 
 }

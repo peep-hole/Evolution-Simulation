@@ -1,6 +1,6 @@
 package agh.cs.lab1;
 
-public class Animal implements IMapElement{
+public class Animal {
 
     private MapDirection orientation;
     private Vector2d position;
@@ -65,6 +65,23 @@ public class Animal implements IMapElement{
             default: throw new IllegalArgumentException();
 
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null)
+            return false;
+        if(this == other)
+            return true;
+        if (!(other instanceof Animal))
+            return false;
+        Animal that = (Animal) other;
+        return (position.x == that.position.x)&&(position.y==that.position.y);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31* position.x + 13 * position.y;
     }
 
 }

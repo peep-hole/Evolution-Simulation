@@ -9,6 +9,9 @@ public class GrassField extends AbstractWorldMap {
 
     private final List<Grass> grasses;
 
+    private Vector2d upperRightCorner;
+    private Vector2d lowerLeftCorner;
+
     public GrassField(int n) {
 
         if( n < 0 ) throw new IllegalArgumentException("Grass amount can not be negative");
@@ -32,7 +35,7 @@ public class GrassField extends AbstractWorldMap {
 
             Vector2d grassPosition = new Vector2d(randomX, randomY);
 
-            // Adding grass only if position is not occupied by other grass so total grass amount on map is equal n
+            // Adding grass only if position is not occupied by other grass so total grass amount on map equals n
             i--;
             if(!(objectAt(grassPosition) instanceof Grass)) {
                 grasses.add(new Grass(grassPosition));
@@ -43,6 +46,16 @@ public class GrassField extends AbstractWorldMap {
         upperRightCorner = new Vector2d(maxX, maxY);
         lowerLeftCorner = new Vector2d(0, 0);
 
+    }
+
+
+
+    public Vector2d getUpperRightCorner() {
+        return upperRightCorner;
+    }
+
+    public Vector2d getLowerLeftCorner() {
+        return lowerLeftCorner;
     }
 
     @Override
@@ -62,6 +75,7 @@ public class GrassField extends AbstractWorldMap {
         return true;
     }
 
+
     @Override
     public Object objectAt(Vector2d position) {
         Object result = super.objectAt(position);
@@ -73,7 +87,7 @@ public class GrassField extends AbstractWorldMap {
                 return grass;
             }
         }
-        return result;
+        return null;
     }
 
 

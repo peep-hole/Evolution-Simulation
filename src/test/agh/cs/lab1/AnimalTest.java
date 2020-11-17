@@ -3,7 +3,6 @@ package agh.cs.lab1;
 import org.junit.*;
 
 import java.util.Arrays;
-import java.util.Vector;
 
 public class AnimalTest {
 
@@ -136,6 +135,7 @@ public class AnimalTest {
 
         Assert.assertNotEquals(new Vector2d(1, 2), rat4.getPosition());
         Assert.assertNotEquals("v",rat4.toString());
+
     }
 
 }
