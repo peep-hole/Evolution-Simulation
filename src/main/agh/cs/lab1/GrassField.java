@@ -16,7 +16,6 @@ public class GrassField extends AbstractWorldMap {
 
         if( n < 0 ) throw new IllegalArgumentException("Grass amount can not be negative");
 
-        animals = new LinkedList<>();
         grasses = new LinkedList<>();
 
         Random generator = new Random();
@@ -89,9 +88,6 @@ public class GrassField extends AbstractWorldMap {
         }
         return null;
     }
-
-
-
 
 }
 

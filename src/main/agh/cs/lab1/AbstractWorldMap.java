@@ -1,20 +1,31 @@
 package agh.cs.lab1;
 
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-abstract class AbstractWorldMap implements IWorldMap {
+abstract class AbstractWorldMap implements IWorldMap , IPositionChangeObserver {
 
-    protected List<Animal> animals;
+    protected Map<Vector2d, Animal> animals = new LinkedHashMap<>();
 
     protected MapVisualizer mapVisualizer = new MapVisualizer(this);
 
     @Override
+    public void positionChanged(Vector2d oldPosition,Vector2d newPosition) {
+        Animal animal = (Animal)objectAt(oldPosition);
+        animals.remove(oldPosition);
+        animals.put(newPosition, animal);
+    }
+
+
+    @Override
     public boolean place(Animal animal) {
+
+        animal.addObserver(this);
 
         if (!canMoveTo(animal.getPosition())) {
             return false;
         }
-        animals.add(animal);
+        animals.put(animal.getPosition(), animal);
         return true;
     }
 
@@ -38,12 +49,7 @@ abstract class AbstractWorldMap implements IWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
-        for (Animal animal : animals) {
-            if (animal.getPosition().equals(position)) {
-                return animal;
-            }
-        }
-        return  null;
+        return animals.get(position);
     }
 
 

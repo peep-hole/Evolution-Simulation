@@ -14,18 +14,14 @@ public class AnimalTest {
         MoveDirection[] x1 = {MoveDirection.LEFT, MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.RIGHT};
         String[] y1 = {"l", "forward", "b", "r"};
         MoveDirection[] ny1 = OptionParser.parse(y1);
-        for(int i = 0; i < x1.length; i++){
-            Assert.assertEquals(x1[i], ny1[i]);
-        }
+        Assert.assertArrayEquals(x1,ny1);
 
         // Test 2
 
         MoveDirection[] x2 = {MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.RIGHT, null, null, null};
         String[] y2 = {"right", "something", "else", "b", "?", "r"};
         MoveDirection[] ny2 = OptionParser.parse(y2);
-        for(int i = 0; i < x2.length; i++){
-            Assert.assertEquals(x2[i], ny2[i]);
-        }
+        Assert.assertArrayEquals(x2, ny2);
 
         // Test 3
 
@@ -94,12 +90,13 @@ public class AnimalTest {
     @Test
     public void AnimalMainTests(){
 
-        // Improved tests including map interface
+        // Improved tests including map and observer interface
 
         // Test1
 
         RectangularMap map1 = new RectangularMap(5, 5);
         Animal rat1 = new Animal(map1);
+        rat1.addObserver(map1);
         String[] path1 = {"f", "f", "ff", "forward", "l", "l,left", "left", "b", "f", "f", "forward", "f", "f", "b", "l", "bagwart", "backward"};
         World.moveAlong(path1, rat1);
 

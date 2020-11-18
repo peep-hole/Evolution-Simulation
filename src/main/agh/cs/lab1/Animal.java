@@ -1,12 +1,18 @@
 package agh.cs.lab1;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Animal {
 
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
 
+    private List<IPositionChangeObserver> observers;
+
     private Animal(IWorldMap map, MapDirection direction, Vector2d position) {
+        observers = new LinkedList<>();
         orientation = direction;
         this.map = map;
         this.position = position;
@@ -24,6 +30,20 @@ public class Animal {
         this(map, MapDirection.NORTH, initialPosition);
     }
 
+    public void addObserver(IPositionChangeObserver observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(IPositionChangeObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+        for(IPositionChangeObserver observer : observers) {
+            observer.positionChanged(oldPosition, newPosition);
+        }
+    }
+
     public Vector2d getPosition() {
         return position;
     }
@@ -39,6 +59,9 @@ public class Animal {
     }
 
     public void move( MoveDirection direction){
+
+        Vector2d oldPosition = position;
+
         switch(direction){
 
             case RIGHT:
@@ -65,6 +88,9 @@ public class Animal {
             default: throw new IllegalArgumentException();
 
         }
+
+        Vector2d newPosition = position;
+        if(!(oldPosition.equals(newPosition))) positionChanged(oldPosition, newPosition);
     }
 
     @Override
