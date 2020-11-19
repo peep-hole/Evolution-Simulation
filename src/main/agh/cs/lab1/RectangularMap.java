@@ -7,10 +7,10 @@ public class RectangularMap extends AbstractWorldMap {
     private final Vector2d upperRightCorner;
     private final Vector2d lowerLeftCorner;
 
-    RectangularMap(int width, int height) {
+    RectangularMap(int width, int height) { // public
         upperRightCorner = new Vector2d(width-1, height-1);
         lowerLeftCorner = new Vector2d(0, 0);
-        animals = new LinkedList<>();
+        animals = new LinkedList<>();   // czemu mapa abstrakcyjna tego nie stworzyła?
     }
 
     public Vector2d getUpperRightCorner() {

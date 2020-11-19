@@ -4,9 +4,9 @@ import java.util.List;
 
 abstract class AbstractWorldMap implements IWorldMap {
 
-    protected List<Animal> animals;
+    protected List<Animal> animals; // to pole może być finalne
 
-    protected MapVisualizer mapVisualizer = new MapVisualizer(this);
+    protected MapVisualizer mapVisualizer = new MapVisualizer(this);    // to pole może być finalne i prywatne
 
     @Override
     public boolean place(Animal animal) {

@@ -14,7 +14,7 @@ public class GrassField extends AbstractWorldMap {
 
     public GrassField(int n) {
 
-        if( n < 0 ) throw new IllegalArgumentException("Grass amount can not be negative");
+        if( n < 0 ) throw new IllegalArgumentException("Grass amount cannot be negative");
 
         animals = new LinkedList<>();
         grasses = new LinkedList<>();
@@ -64,7 +64,7 @@ public class GrassField extends AbstractWorldMap {
         boolean result = super.canMoveTo(position);
         if(!result) return false;
 
-        // changing map borders if needed
+        // changing map borders if needed   // to nie jest dobry moment; na razie tylko sprawdzamy, czy można iść, a nie idziemy
         if(!position.precedes(upperRightCorner)) {
             upperRightCorner = new Vector2d(Math.max(position.x, upperRightCorner.x), Math.max(position.y, upperRightCorner.y));
         }

@@ -6,7 +6,7 @@ public class Animal {
     private Vector2d position;
     private final IWorldMap map;
 
-    private Animal(IWorldMap map, MapDirection direction, Vector2d position) {
+    private Animal(IWorldMap map, MapDirection direction, Vector2d position) {  // jeśli Pan ma konstruktor 1-, 2- i 3-argumentowy, to dobrze zachować kolejność argumentów we wszystkich
         orientation = direction;
         this.map = map;
         this.position = position;
@@ -76,11 +76,11 @@ public class Animal {
         if (!(other instanceof Animal))
             return false;
         Animal that = (Animal) other;
-        return (position.x == that.position.x)&&(position.y==that.position.y);
+        return (position.x == that.position.x)&&(position.y==that.position.y);  // wektor ma equals
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode() { // wektor ma hashCode
         return 31* position.x + 13 * position.y;
     }
 
