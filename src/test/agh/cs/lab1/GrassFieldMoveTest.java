@@ -172,6 +172,17 @@ public class GrassFieldMoveTest {
 
         Assert.assertEquals(map2.getUpperRightCorner(),rat2.getPosition());
         Assert.assertEquals(map2.getLowerLeftCorner(), cat2.getPosition());
+
+        // Test 3
+
+        GrassField map3 = new GrassField(0);
+        Vector2d[] animal = {new Vector2d(0,0)};
+        String[] path3 = {"f", "f", "f", "f", "f", "f", "f", "f", "f", "f"};
+        SimulationEngine engine3 = new SimulationEngine(OptionParser.parse(path3), map3, animal);
+
+        engine3.run();
+
+        Assert.assertEquals(map3.getUpperRightCorner(),new Vector2d(0,10));
     }
 
 }

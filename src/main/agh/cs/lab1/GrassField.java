@@ -14,7 +14,7 @@ public class GrassField extends AbstractWorldMap {
 
     public GrassField(int n) {
 
-        if( n < 0 ) throw new IllegalArgumentException("Grass amount can not be negative");
+        if( n < 0 ) throw new IllegalArgumentException("Grass amount cannot be negative");
 
         grasses = new LinkedList<>();
 
@@ -47,6 +47,34 @@ public class GrassField extends AbstractWorldMap {
 
     }
 
+    public void updateMapSizeIfNeeded(Vector2d newPosition) {
+        // changing map borders if needed
+        if(!newPosition.precedes(upperRightCorner)) {
+            upperRightCorner = new Vector2d(Math.max(newPosition.x, upperRightCorner.x), Math.max(newPosition.y, upperRightCorner.y));
+        }
+        if(!newPosition.follows(lowerLeftCorner)) {
+            lowerLeftCorner = new Vector2d(Math.min(newPosition.x, lowerLeftCorner.x), Math.min(newPosition.y, lowerLeftCorner.y));
+        }
+    }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition,Vector2d newPosition) {
+        super.positionChanged(oldPosition, newPosition);
+
+        updateMapSizeIfNeeded(newPosition);
+    }
+
+    @Override
+    public boolean place(Animal animal) {
+        boolean result = super.place(animal);
+
+        if(result) {
+            updateMapSizeIfNeeded(animal.getPosition());
+        }
+
+        return result;
+    }
+
 
 
     public Vector2d getUpperRightCorner() {
@@ -55,23 +83,6 @@ public class GrassField extends AbstractWorldMap {
 
     public Vector2d getLowerLeftCorner() {
         return lowerLeftCorner;
-    }
-
-    @Override
-    public boolean canMoveTo(Vector2d position) {
-
-        boolean result = super.canMoveTo(position);
-        if(!result) return false;
-
-        // changing map borders if needed
-        if(!position.precedes(upperRightCorner)) {
-            upperRightCorner = new Vector2d(Math.max(position.x, upperRightCorner.x), Math.max(position.y, upperRightCorner.y));
-        }
-        if(!position.follows(lowerLeftCorner)) {
-            lowerLeftCorner = new Vector2d(Math.min(position.x, lowerLeftCorner.x), Math.min(position.y, lowerLeftCorner.y));
-        }
-
-        return true;
     }
 
 

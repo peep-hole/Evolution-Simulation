@@ -7,7 +7,7 @@ abstract class AbstractWorldMap implements IWorldMap , IPositionChangeObserver {
 
     protected Map<Vector2d, Animal> animals = new LinkedHashMap<>();
 
-    protected MapVisualizer mapVisualizer = new MapVisualizer(this);
+    private final MapVisualizer mapVisualizer = new MapVisualizer(this);
 
     @Override
     public void positionChanged(Vector2d oldPosition,Vector2d newPosition) {

@@ -11,7 +11,7 @@ public class Animal {
 
     private List<IPositionChangeObserver> observers;
 
-    private Animal(IWorldMap map, MapDirection direction, Vector2d position) {
+    private Animal(IWorldMap map,  Vector2d position, MapDirection direction) {
         observers = new LinkedList<>();
         orientation = direction;
         this.map = map;
@@ -23,11 +23,11 @@ public class Animal {
     }
 
     public Animal(IWorldMap map){
-        this(map, MapDirection.NORTH, new Vector2d(2, 2));
+        this(map,  new Vector2d(2, 2), MapDirection.NORTH);
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition){
-        this(map, MapDirection.NORTH, initialPosition);
+        this(map,  initialPosition, MapDirection.NORTH);
     }
 
     public void addObserver(IPositionChangeObserver observer) {
@@ -91,23 +91,6 @@ public class Animal {
 
         Vector2d newPosition = position;
         if(!(oldPosition.equals(newPosition))) positionChanged(oldPosition, newPosition);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (other == null)
-            return false;
-        if(this == other)
-            return true;
-        if (!(other instanceof Animal))
-            return false;
-        Animal that = (Animal) other;
-        return (position.x == that.position.x)&&(position.y==that.position.y);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31* position.x + 13 * position.y;
     }
 
 }

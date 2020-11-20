@@ -25,51 +25,51 @@ public class World {
 //            }
 //        }
 //    }
-    static void run(Directions[] variables){
-        for(Directions direction : variables){
-            switch(direction){
-                case LEFT:
-                    out.println("Zwierzak skręca w lewo");
-                    break;
-                case RIGHT:
-                    out.println("Zwierzak skręca w prawo");
-                    break;
-                case FORWARD:
-                    out.println("Zwierzak idzie do przodu");
-                    break;
-                case BACKWARD:
-                    out.println("Zwierzak idzie do tyłu");
-                    break;
-            }
-        }
-    }
-    static Directions[] convert(String[] input){
-        int i = 0;
-        for(String isValid: input){
-            if(isValid.equals("f")||isValid.equals("b")||isValid.equals("l")||isValid.equals("r")){
-                i++;
-            }
-        }
-        Directions[] route = new Directions[i];
-        i = 0;
-        for(String dokadTuptaNocaJez: input){
-            switch(dokadTuptaNocaJez){
-                case "f":
-                    route[i++] = Directions.FORWARD;
-                    break;
-                case "b":
-                    route[i++] = Directions.BACKWARD;
-                    break;
-                case "l":
-                    route[i++] = Directions.LEFT;
-                    break;
-                case "r":
-                    route[i++] = Directions.RIGHT;
-                    break;
-            }
-        }
-        return route;
-    }
+//    static void run(Directions[] variables){
+//        for(Directions direction : variables){
+//            switch(direction){
+//                case LEFT:
+//                    out.println("Zwierzak skręca w lewo");
+//                    break;
+//                case RIGHT:
+//                    out.println("Zwierzak skręca w prawo");
+//                    break;
+//                case FORWARD:
+//                    out.println("Zwierzak idzie do przodu");
+//                    break;
+//                case BACKWARD:
+//                    out.println("Zwierzak idzie do tyłu");
+//                    break;
+//            }
+//        }
+//    }
+//    static Directions[] convert(String[] input){
+//        int i = 0;
+//        for(String isValid: input){
+//            if(isValid.equals("f")||isValid.equals("b")||isValid.equals("l")||isValid.equals("r")){
+//                i++;
+//            }
+//        }
+//        Directions[] route = new Directions[i];
+//        i = 0;
+//        for(String dokadTuptaNocaJez: input){
+//            switch(dokadTuptaNocaJez){
+//                case "f":
+//                    route[i++] = Directions.FORWARD;
+//                    break;
+//                case "b":
+//                    route[i++] = Directions.BACKWARD;
+//                    break;
+//                case "l":
+//                    route[i++] = Directions.LEFT;
+//                    break;
+//                case "r":
+//                    route[i++] = Directions.RIGHT;
+//                    break;
+//            }
+//        }
+//        return route;
+//    }
 
     public static void moveAlong(String[] pathToConvert, Animal beast){
         int i = 0;
