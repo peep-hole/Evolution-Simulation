@@ -26,7 +26,7 @@ public class Grass {
         if (!(other instanceof Grass))
             return false;
         Grass that = (Grass) other;
-        return (position.x == that.position.x)&&(position.y==that.position.y);
+        return (position.x == that.position.x)&&(position.y==that.position.y);  // wektor ma metodę equals
     }
 
     @Override

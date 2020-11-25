@@ -11,7 +11,7 @@ abstract class AbstractWorldMap implements IWorldMap , IPositionChangeObserver {
 
     @Override
     public void positionChanged(Vector2d oldPosition,Vector2d newPosition) {
-        Animal animal = (Animal)objectAt(oldPosition);
+        Animal animal = (Animal)objectAt(oldPosition);  // czy to rzutowanie jest potrzebne?
         animals.remove(oldPosition);
         animals.put(newPosition, animal);
     }
@@ -20,7 +20,7 @@ abstract class AbstractWorldMap implements IWorldMap , IPositionChangeObserver {
     @Override
     public boolean place(Animal animal) {
 
-        animal.addObserver(this);
+        animal.addObserver(this);   // a jeśli się nie uda dodać zwierzęcia do mapy, to nadal je chcemu obserwować?
 
         if (!canMoveTo(animal.getPosition())) {
             return false;

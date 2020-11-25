@@ -47,7 +47,7 @@ public class GrassField extends AbstractWorldMap {
 
     }
 
-    public void updateMapSizeIfNeeded(Vector2d newPosition) {
+    public void updateMapSizeIfNeeded(Vector2d newPosition) {   // to nie powinno być publiczne
         // changing map borders if needed
         if(!newPosition.precedes(upperRightCorner)) {
             upperRightCorner = new Vector2d(Math.max(newPosition.x, upperRightCorner.x), Math.max(newPosition.y, upperRightCorner.y));

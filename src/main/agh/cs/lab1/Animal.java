@@ -9,7 +9,7 @@ public class Animal {
     private Vector2d position;
     private final IWorldMap map;
 
-    private List<IPositionChangeObserver> observers;
+    private List<IPositionChangeObserver> observers;    // to pole może być finalne
 
     private Animal(IWorldMap map,  Vector2d position, MapDirection direction) {
         observers = new LinkedList<>();
@@ -89,7 +89,7 @@ public class Animal {
 
         }
 
-        Vector2d newPosition = position;
+        Vector2d newPosition = position;    // czy ta zmienna jest potrzebna?
         if(!(oldPosition.equals(newPosition))) positionChanged(oldPosition, newPosition);
     }
 
