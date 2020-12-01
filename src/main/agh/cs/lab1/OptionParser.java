@@ -2,7 +2,7 @@ package agh.cs.lab1;
 
 public class OptionParser {
 
-    public static MoveDirection[] parse(String[] commands){
+    public static MoveDirection[] parse(String[] commands) throws IllegalArgumentException {
 
         MoveDirection[] path = new MoveDirection[commands.length];
         int i, j = 0;
@@ -33,6 +33,9 @@ public class OptionParser {
                 case "left":
                     path[j++] = MoveDirection.LEFT;
                     break;
+
+                default:
+                    throw new IllegalArgumentException(commands[i] + " is not legal move specification");
 
             }
         }

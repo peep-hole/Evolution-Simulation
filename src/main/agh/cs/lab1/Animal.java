@@ -3,13 +3,13 @@ package agh.cs.lab1;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Animal {
+public class Animal implements IMapElement{
 
     private MapDirection orientation;
     private Vector2d position;
     private final IWorldMap map;
 
-    private List<IPositionChangeObserver> observers;
+    private final List<IPositionChangeObserver> observers;
 
     private Animal(IWorldMap map,  Vector2d position, MapDirection direction) {
         observers = new LinkedList<>();
@@ -89,8 +89,7 @@ public class Animal {
 
         }
 
-        Vector2d newPosition = position;
-        if(!(oldPosition.equals(newPosition))) positionChanged(oldPosition, newPosition);
+        if(!(oldPosition.equals(position))) positionChanged(oldPosition, position);
     }
 
 }

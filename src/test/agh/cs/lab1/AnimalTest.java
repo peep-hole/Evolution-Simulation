@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class AnimalTest {
 
     @Test
-    public void OptionParserTest(){
+    public void optionParserTest(){
 
         // Test1
 
@@ -18,22 +18,47 @@ public class AnimalTest {
 
         // Test 2
 
-        MoveDirection[] x2 = {MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.RIGHT, null, null, null};
-        String[] y2 = {"right", "something", "else", "b", "?", "r"};
+        MoveDirection[] x2 = {MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.RIGHT};
+        String[] y2 = {"right", "b", "r"};
         MoveDirection[] ny2 = OptionParser.parse(y2);
         Assert.assertArrayEquals(x2, ny2);
 
         // Test 3
 
-        MoveDirection[] x3 = {MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.RIGHT, null, null, null};
-        String[] y3 = {"right", "null", "null", "null", "null", "r"};
+        MoveDirection[] x3 = {MoveDirection.RIGHT, MoveDirection.BACKWARD, MoveDirection.RIGHT};
+        String[] y3 = {"right", "r"};
         MoveDirection[] ny3 = OptionParser.parse(y3);
         Assert.assertFalse(Arrays.equals(x3,ny3));
 
     }
 
     @Test
-    public void AnimalMoveAndToStringTests(){
+    public void optionParserArgumentIsNotLegalMoveSpecificationExceptionTest() {
+        // Attempt no. 1
+
+        boolean thrown1 = false;
+        try {
+            String[] s1 = {"something"};
+            MoveDirection[] parsed1 = OptionParser.parse(s1);
+        } catch (IllegalArgumentException e) {
+            thrown1 = true;
+        }
+        Assert.assertTrue(thrown1);
+
+        // Attempt no. 2
+
+        boolean thrown2 = false;
+        try {
+            String[] s2 = {"l", "f", "r", " l"};
+            MoveDirection[] parsed2 = OptionParser.parse(s2);
+        } catch (IllegalArgumentException e) {
+            thrown2 = true;
+        }
+        Assert.assertTrue(thrown2);
+    }
+
+    @Test
+    public void animalMoveAndToStringTests(){
 
         // Improved tests including map interface
 
@@ -88,7 +113,7 @@ public class AnimalTest {
     }
 
     @Test
-    public void AnimalMainTests(){
+    public void animalMainTests(){
 
         // Improved tests including map and observer interface
 
@@ -97,7 +122,7 @@ public class AnimalTest {
         RectangularMap map1 = new RectangularMap(5, 5);
         Animal rat1 = new Animal(map1);
         rat1.addObserver(map1);
-        String[] path1 = {"f", "f", "ff", "forward", "l", "l,left", "left", "b", "f", "f", "forward", "f", "f", "b", "l", "bagwart", "backward"};
+        String[] path1 = {"f", "f", "forward", "l", "left", "b", "f", "f", "forward", "f", "f", "b", "l", "backward"};
         World.moveAlong(path1, rat1);
 
         Assert.assertEquals(new Vector2d(1, 1), rat1.getPosition());
@@ -107,7 +132,7 @@ public class AnimalTest {
 
         RectangularMap map2 = new RectangularMap(5, 5);
         Animal rat2 = new Animal(map2);
-        String[] path2 = {"f", "i", "f", "right", "f", "r", "back", "backward", "lewt", "left", "ahead", "f", "f","r" ," s" , "f"};
+        String[] path2 = {"f", "f", "right", "f", "r", "backward", "left", "f", "f","r" , "f"};
         World.moveAlong(path2, rat2);
 
         Assert.assertEquals(new Vector2d(4, 3), rat2.getPosition());
@@ -117,7 +142,7 @@ public class AnimalTest {
 
         RectangularMap map3 = new RectangularMap(5, 5);
         Animal rat3 = new Animal(map3);
-        String[] path3 = {"l", "l", "l", "l", "l", "l" , "f" ,"l", " l ", "b", "r", "b"};
+        String[] path3 = {"l", "l", "l", "l", "l", "l" , "f" ,"l", "b", "r", "b"};
         World.moveAlong(path3, rat3);
 
         Assert.assertEquals(new Vector2d(1, 2), rat3.getPosition());
@@ -127,7 +152,7 @@ public class AnimalTest {
 
         RectangularMap map4 = new RectangularMap(5, 5);
         Animal rat4 = new Animal(map4);
-        String[] path4 = {"l", "l", "r", "l", "l", "l" , "r" ,"l", " l ", "r", "r", "r"};
+        String[] path4 = {"l", "l", "r", "l", "l", "l" , "r" ,"l", "r", "r", "r"};
         World.moveAlong(path4, rat4);
 
         Assert.assertNotEquals(new Vector2d(1, 2), rat4.getPosition());

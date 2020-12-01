@@ -132,7 +132,7 @@ public class GrassFieldMoveTest {
         try {
             Animal Cat = new Animal(map, new Vector2d(100, 100));
             Animal blindCat = new Animal(map, new Vector2d(100, 100));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown1 = true;
         }
 
@@ -144,7 +144,7 @@ public class GrassFieldMoveTest {
         try {
             Animal Dog = new Animal(map, new Vector2d(-25, 33));
             Animal blindDog = new Animal(map, new Vector2d(-25, 33));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown2 = true;
         }
 

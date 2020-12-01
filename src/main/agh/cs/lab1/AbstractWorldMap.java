@@ -11,21 +11,22 @@ abstract class AbstractWorldMap implements IWorldMap , IPositionChangeObserver {
 
     @Override
     public void positionChanged(Vector2d oldPosition,Vector2d newPosition) {
-        Animal animal = (Animal)objectAt(oldPosition);
+        animals.put(newPosition, animals.get(oldPosition));
         animals.remove(oldPosition);
-        animals.put(newPosition, animal);
     }
 
 
     @Override
-    public boolean place(Animal animal) {
+    public boolean place(Animal animal) throws IllegalArgumentException {
+
+        if (!canMoveTo(animal.getPosition())) {
+            throw new IllegalArgumentException("Position: " + animal.getPosition() + " is occupied or out of map!");
+        }
 
         animal.addObserver(this);
 
-        if (!canMoveTo(animal.getPosition())) {
-            return false;
-        }
         animals.put(animal.getPosition(), animal);
+
         return true;
     }
 

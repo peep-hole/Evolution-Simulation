@@ -1,4 +1,5 @@
 package agh.cs.lab1;
+import static java.lang.System.exit;
 import static java.lang.System.out;
 
 public class World {
@@ -80,7 +81,7 @@ public class World {
     }
 
     public static void main(String[] args){
-//        out.println("Start");
+        try{//        out.println("Start");
 //        String[] tmp = {"f", "l"};
 //        run(tmp);
 //        Directions[] route = convert(args);
@@ -106,22 +107,27 @@ public class World {
 //     out.print(testV.toString());
 
 
-
-
-
 //        Animal kitty = new Animal();
 //        moveAlong(args, kitty);
 //        out.println(kitty);
 
 
+            RectangularMap map = new RectangularMap(2, 2);
+            Animal a1 = new Animal(map, new Vector2d(1,1));
+
+            // same place attempt
+
+//            Animal a2 = new Animal(map, new Vector2d(1,1));
+
+            // parsing error attempt
+
+            String[] p = {"l_", "r"};
+            moveAlong(p, a1);
 
 
-//        IWorldMap map = new GrassField(10);
-//        out.println(map.toString());
-
-
-
-
-
+        }catch(IllegalArgumentException ex) {
+            out.println(ex.getMessage());
+            exit(1);
+        }
     }
 }

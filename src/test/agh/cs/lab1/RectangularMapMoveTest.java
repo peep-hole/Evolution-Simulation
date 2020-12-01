@@ -94,7 +94,7 @@ public class RectangularMapMoveTest {
         boolean thrown1 = false;
         try {
             Animal curiousCat = new Animal(map, new Vector2d(-1, 2));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown1 = true;
         }
 
@@ -105,7 +105,7 @@ public class RectangularMapMoveTest {
         boolean thrown2 = false;
         try {
             Animal curiousDog = new Animal(map, new Vector2d(7, 3));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown2 = true;
         }
 
@@ -117,7 +117,7 @@ public class RectangularMapMoveTest {
         boolean thrown3 = false;
         try {
             Animal curiousRat = new Animal(map, new Vector2d(20, -20));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown3 = true;
         }
 
@@ -135,7 +135,7 @@ public class RectangularMapMoveTest {
         try {
             Animal Cat = new Animal(map, new Vector2d(2, 2));
             Animal blindCat = new Animal(map, new Vector2d(2, 2));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown1 = true;
         }
 
@@ -147,7 +147,7 @@ public class RectangularMapMoveTest {
         try {
             Animal Dog = new Animal(map, new Vector2d(0, 1));
             Animal blindDog = new Animal(map, new Vector2d(0, 1));
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             thrown2 = true;
         }
 

@@ -9,10 +9,11 @@ public class GrassField extends AbstractWorldMap {
 
     private final List<Grass> grasses;
 
-    private Vector2d upperRightCorner;
-    private Vector2d lowerLeftCorner;
+    private final MapBoundary boundary;
 
     public GrassField(int n) {
+
+        boundary = new MapBoundary();
 
         if( n < 0 ) throw new IllegalArgumentException("Grass amount cannot be negative");
 
@@ -21,16 +22,11 @@ public class GrassField extends AbstractWorldMap {
         Random generator = new Random();
         int range = Math.round((float)Math.sqrt(10*n));
 
-        int maxX = 0, maxY = 0;
-
         for(int i=0; i<n; i++) {
 
-            // setting up map borders
             int randomX = generator.nextInt(range);
-            if(randomX > maxX)  maxX = randomX;
 
             int randomY = generator.nextInt(range);
-            if(randomY > maxY)  maxY = randomY;
 
             Vector2d grassPosition = new Vector2d(randomX, randomY);
 
@@ -38,51 +34,36 @@ public class GrassField extends AbstractWorldMap {
             i--;
             if(!(objectAt(grassPosition) instanceof Grass)) {
                 grasses.add(new Grass(grassPosition));
+                boundary.addElement(grasses.get(grasses.size()-1));
                 i++;
             }
 
         }
-        upperRightCorner = new Vector2d(maxX, maxY);
-        lowerLeftCorner = new Vector2d(0, 0);
 
-    }
-
-    public void updateMapSizeIfNeeded(Vector2d newPosition) {
-        // changing map borders if needed
-        if(!newPosition.precedes(upperRightCorner)) {
-            upperRightCorner = new Vector2d(Math.max(newPosition.x, upperRightCorner.x), Math.max(newPosition.y, upperRightCorner.y));
-        }
-        if(!newPosition.follows(lowerLeftCorner)) {
-            lowerLeftCorner = new Vector2d(Math.min(newPosition.x, lowerLeftCorner.x), Math.min(newPosition.y, lowerLeftCorner.y));
-        }
     }
 
     @Override
     public void positionChanged(Vector2d oldPosition,Vector2d newPosition) {
         super.positionChanged(oldPosition, newPosition);
-
-        updateMapSizeIfNeeded(newPosition);
     }
 
     @Override
     public boolean place(Animal animal) {
-        boolean result = super.place(animal);
-
-        if(result) {
-            updateMapSizeIfNeeded(animal.getPosition());
+        if(super.place(animal)) {
+            boundary.addElement(animal);
+            return true;
         }
-
-        return result;
+        return false;
     }
 
 
 
     public Vector2d getUpperRightCorner() {
-        return upperRightCorner;
+        return boundary.upperRight();
     }
 
     public Vector2d getLowerLeftCorner() {
-        return lowerLeftCorner;
+        return boundary.lowerLeft();
     }
 
 
