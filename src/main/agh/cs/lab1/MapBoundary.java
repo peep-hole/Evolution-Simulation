@@ -45,7 +45,7 @@ public class MapBoundary implements IPositionChangeObserver{
     }
 
     public Vector2d upperRight() {
-        if(alongX.size() == 0) throw new IllegalStateException("Map is empty!");
+        if(alongX.size() == 0) throw new IllegalStateException("Map is empty!");    // sugeruję raczej zwracać wektor (0,0) - pusta mapa właściwie nie jest błędna, choć nudna
         if(!updated) update();
         return new Vector2d(alongX.get(alongX.size()-1).getPosition().x,alongY.get(alongX.size()-1).getPosition().y);
     }
