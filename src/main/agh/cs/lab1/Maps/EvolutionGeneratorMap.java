@@ -102,7 +102,10 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
     }
 
     public Vector2d randomVectorInRange(Vector2d lowerLeft, Vector2d upperRight) {
+
         if(lowerLeft.equals(upperRight)) return lowerLeft;
+
+        if((upperRight.x - lowerLeft.x == 0)||(upperRight.y- lowerLeft.y == 0)) return null;
 
         if(!lowerLeft.precedes(upperRight)) return null;
 
@@ -281,9 +284,6 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
     }
 
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
-
-        System.out.println(animal.isAlive());
-        System.out.println(animalMap.get(oldPosition));
 
         animalMap.get(oldPosition).remove(animal);
         if(animalMap.get(oldPosition).size() == 0) {

@@ -1,7 +1,6 @@
 package agh.cs.lab1.Visulisation;
 
 import agh.cs.lab1.Maps.EvolutionGeneratorMap;
-import agh.cs.lab1.Simulation.SimulationEngine;
 import agh.cs.lab1.Simulation.SimulationLauncher;
 import agh.cs.lab1.Utilities.Vector2d;
 
@@ -21,7 +20,7 @@ public class MapPanel extends JPanel {
     private final int yRatio;
     private EvolutionGeneratorMap map;
 
-    private MapLabel[][] labels;
+    private FieldPanel[][] labels;
 
     public MapPanel(int x, int y, int width, int height, SimulationLauncher launcher) {
         this.x = x;
@@ -32,34 +31,49 @@ public class MapPanel extends JPanel {
 
         map = launcher.getMap();
 
-        this.setBounds(x, y, width, height);
-
         mapWidth = map.getUpperRightCorner().x - map.getLowerLeftCorner().x;
         mapHeight = map.getUpperRightCorner().y - map.getLowerLeftCorner().y;
 
         xRatio = width / mapWidth;
         yRatio = height / mapHeight;
 
-        labels = new MapLabel[mapWidth][mapHeight];
+        labels = new FieldPanel[mapWidth][mapHeight];
 
         for(int xPos = 0; xPos < mapWidth; xPos++){
             for(int yPos = 0; yPos < mapHeight; yPos++) {
                 Vector2d position = new Vector2d(xPos, yPos);
-                labels[xPos][yPos] = new MapLabel(xPos*xRatio, yPos*yRatio, mapWidth, mapHeight,
+                labels[xPos][yPos] = new FieldPanel(xPos*xRatio, yPos*yRatio, mapWidth, mapHeight,
                         map.getStrongestAnimalAt(position), map.isInJungle(position), map.isGrassAt(position));
             }
         }
-        this.repaint();
     }
 
-    public void repaintLabels() {
+    @Override
+    public void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+
+        this.setBounds(x, y, width, height);
+
         for(int xPos = 0; xPos < mapWidth; xPos++){
             for(int yPos = 0; yPos < mapHeight; yPos++) {
                 Vector2d position = new Vector2d(xPos, yPos);
                 labels[xPos][yPos].updateState(map.getStrongestAnimalAt(position), map.isInJungle(position), map.isGrassAt(position) );
                 labels[xPos][yPos].repaint();
-                System.out.println("#######################################################################");
+                this.add(labels[xPos][yPos]);
             }
         }
+
     }
+
+
+//    public void repaintLabels() {
+//        for(int xPos = 0; xPos < mapWidth; xPos++){
+//            for(int yPos = 0; yPos < mapHeight; yPos++) {
+//                Vector2d position = new Vector2d(xPos, yPos);
+//                labels[xPos][yPos].updateState(map.getStrongestAnimalAt(position), map.isInJungle(position), map.isGrassAt(position) );
+//                labels[xPos][yPos].repaint();
+//            }
+//        }
+//    }
 }

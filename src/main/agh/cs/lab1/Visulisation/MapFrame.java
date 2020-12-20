@@ -1,11 +1,9 @@
 package agh.cs.lab1.Visulisation;
 
-import agh.cs.lab1.MapElements.Animal;
 import agh.cs.lab1.Maps.EvolutionGeneratorMap;
 import agh.cs.lab1.Simulation.FollowedAnimalStats;
 import agh.cs.lab1.Simulation.SimulationLauncher;
 import agh.cs.lab1.Simulation.Statistics;
-import agh.cs.lab1.Utilities.Vector2d;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +26,7 @@ public class MapFrame extends JFrame implements ActionListener {
     private JButton stopButton;
     private JButton getStatButton;
 
-    private MapLabel[][] mapLabels;
+    private FieldPanel[][] fieldPanels;
 
     private int height;
     private int width;
@@ -41,7 +39,7 @@ public class MapFrame extends JFrame implements ActionListener {
         this.stats = stats;
         this.followedAnimal = followedAnimal;
 
-        mapLabels = new MapLabel[width][height];
+        fieldPanels = new FieldPanel[width][height];
 
         this.height = height;
         this.width = width;
@@ -149,12 +147,12 @@ public class MapFrame extends JFrame implements ActionListener {
         statPanel.setLayout(new GridLayout(7,1));
         statPanel.setBackground(Color.WHITE);
         statPanel.setBounds(0, 600, 500, 500);
-        
+
         JLabel titleLabel = new JLabel("Statistics");
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        
+
         LinkedList<JLabel> statLabels = new LinkedList<>();
-        
+
         if(stats != null) {
             statLabels.add(new JLabel());
             statLabels.add(new JLabel());
@@ -180,14 +178,14 @@ public class MapFrame extends JFrame implements ActionListener {
             statLabels.get(5).setText("Average children amount : " + stats.getAverageChildAmount());
             statLabels.get(5).setHorizontalAlignment(JLabel.CENTER);
         }
-        
+
         statPanel.add(titleLabel);
         for(JLabel label : statLabels) {
             statPanel.add(label);
         }
-        
-        
-        
+
+
+
         // FRAME SETTINGS
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -254,6 +252,6 @@ public class MapFrame extends JFrame implements ActionListener {
     }
 
     public void repaintMapPanel() {
-        mapPanel.repaintLabels();
+        mapPanel.repaint();
     }
 }

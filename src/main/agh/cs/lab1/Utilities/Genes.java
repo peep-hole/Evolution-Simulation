@@ -98,7 +98,7 @@ public class Genes {
             for(int i = 0; i < resultGenotype.length; i++) {
                 if(resultGenotype[i] == forSubstitution) resultGenotype[i] = lackingGene;
             }
-            if(--geneTypeCounter[forSubstitution] == 1) excessiveGenes.remove(forSubstitution);
+            if(--geneTypeCounter[forSubstitution] == 1) excessiveGenes.remove(new Integer(forSubstitution));
         }
 
         Arrays.sort(resultGenotype);

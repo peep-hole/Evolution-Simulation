@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class MapLabel extends JLabel implements MouseListener {
+public class FieldPanel extends JPanel implements MouseListener {
 
     private Animal animal;
     private boolean isJungle;
@@ -18,8 +18,8 @@ public class MapLabel extends JLabel implements MouseListener {
     private int mapWidth;
     private int mapHeight;
 
-    public MapLabel(int x, int y, int mapWidth, int mapHeight,
-                    Animal animal, boolean isJungle, boolean isGrass) {
+    public FieldPanel(int x, int y, int mapWidth, int mapHeight,
+                      Animal animal, boolean isJungle, boolean isGrass) {
 
         this.animal = animal;
         this.isJungle = isJungle;
@@ -33,7 +33,7 @@ public class MapLabel extends JLabel implements MouseListener {
 
     }
 
-    public MapLabel(int x, int y, int mapWidth, int mapHeight) {
+    public FieldPanel(int x, int y, int mapWidth, int mapHeight) {
         this.setBounds(x, y, 1000/mapWidth, 1000/mapHeight);
         if(((x%2 == 0)&&(y%2==0))||((x%2==1)&&(y%2==1))) this.setBackground(Color.GREEN);
         else this.setBackground(Color.BLUE);
