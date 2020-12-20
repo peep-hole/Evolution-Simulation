@@ -1,4 +1,6 @@
-package agh.cs.lab1;
+package agh.cs.lab1.Utilities;
+
+import java.util.Random;
 
 public class Vector2d {
 
@@ -62,5 +64,6 @@ public class Vector2d {
     public Vector2d opposite(){
         return new Vector2d((-1) * this.x, (-1) * this.y);
     }
+
 
 }

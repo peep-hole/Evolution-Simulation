@@ -1,5 +1,7 @@
-package agh.cs.lab1;
+package agh.cs.lab1.MapElements;
 
+
+import agh.cs.lab1.Utilities.Vector2d;
 
 /**
  * Interface that describe a map element and its requirements

@@ -1,4 +1,4 @@
-package agh.cs.lab1;
+package agh.cs.lab1.Simulation;
 
 /**
  * The interface responsible for managing the moves of the animals.

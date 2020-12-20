@@ -1,5 +1,6 @@
 package agh.cs.lab1;
 
+import agh.cs.lab1.Utilities.Vector2d;
 import org.junit.*;
 
 
