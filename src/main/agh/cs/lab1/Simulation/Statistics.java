@@ -3,7 +3,6 @@ package agh.cs.lab1.Simulation;
 import agh.cs.lab1.Utilities.Genes;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class Statistics {
 

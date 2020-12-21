@@ -34,8 +34,10 @@ public class MapPanel extends JPanel implements MouseListener {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.map = map;
-        this.launcher = launcher;
+        this.map = map;this.launcher = launcher;
+
+
+
         showDominating = false;
 
         mapWidth = map.getUpperRightCorner().x - map.getLowerLeftCorner().x;
@@ -56,29 +58,33 @@ public class MapPanel extends JPanel implements MouseListener {
         int jungleWidth = map.getJungleUpperRight().x - map.getJungleLowerLeft().x;
         int jungleHeight = map.getJungleUpperRight().y - map.getJungleLowerLeft().y;
 
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
 
+        // STEPPE
 
         g.setColor(new Color(0xDBDA48));
         g.fillRect(0, 0, mapWidth*xRatio, mapHeight*yRatio);
 
-
+        // JUNGLE
 
         g.setColor(new Color(0x00AA57));
         g.fillRect(map.getJungleLowerLeft().x * xRatio, map.getJungleLowerLeft().y * yRatio, jungleWidth* xRatio, jungleHeight * yRatio);
 
+        // GRASS
 
         g.setColor(new Color(0x87FF48));
         for(Grass grass : map.getListGrass()) {
             g.fillRect(grass.getPosition().x * xRatio, grass.getPosition().y * yRatio, xRatio, yRatio);
         }
 
+        // ANIMAL
+
         g.setColor(new Color(0xFF9D9B));
         for(Animal animal : map.getListAnimal()) {
             g.fillRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio);
 
         }
+
+        // DOMINATING ANIMALS
 
         if((showDominating)&&(map.getLeadingGenes().size() == 1)) {
             g.setColor(Color.BLACK);
@@ -87,6 +93,8 @@ public class MapPanel extends JPanel implements MouseListener {
             }
 
         }
+
+        // FOR CHOOSING AN ANIMAL
 
         this.addMouseListener(this);
 
@@ -127,6 +135,8 @@ public class MapPanel extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
+    // SETTERS
 
     public void unsetFieldClicked() {
         isFieldClicked = false;

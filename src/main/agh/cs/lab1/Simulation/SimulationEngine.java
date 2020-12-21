@@ -8,8 +8,6 @@ import agh.cs.lab1.Maps.EvolutionGeneratorMap;
 import agh.cs.lab1.Maps.IStateChangeObserver;
 import agh.cs.lab1.Utilities.Vector2d;
 
-
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -17,26 +15,38 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimulationEngine implements IStateChangeObserver {
 
+    // SIMULATION UTIL
+
     private final EvolutionGeneratorMap map;
 
     private final Map<Integer, Animal> animals;
 
+    private LinkedList<Animal> deadAnimals;
     private Set<Vector2d> fieldsForSimulation;
 
     private final AtomicInteger index;
+    private final AtomicInteger epochNumber;
+
+
+    // PARAMETERS
 
     private final int grassEatingProfit;
     private final int moveCost;
     private final int minimalEnergyForReproduction;
+
     private static final double reproductionCost = 0.25;
+    private static final int amountOfGrassPerSectorOnStart = 1;
+
+    // STATISTICS
 
     private final Statistics stats;
-
     private int amountOfLivingAnimals;
     private int sumOfEnergy;
     private int sumOfLivingAnimalsChildren;
     private int deadAnimalsCount;
     private int totalLifeLengthForDead;
+
+    // FOLLOWED ANIMAL STATS
 
     private Animal followedAnimal;
     private int followedEpochsLeft;
@@ -55,9 +65,7 @@ public class SimulationEngine implements IStateChangeObserver {
     private double totalChildrenCountAverages;
 
 
-    private LinkedList<Animal> deadAnimals;
 
-    private final AtomicInteger epochNumber;
 
     public SimulationEngine(int mapHeight, int mapWidth, float jungleRatio, int amountOfAnimalsOnStart, int moveCost,
                             int grassEatingProfit, int startEnergy) {
@@ -101,21 +109,15 @@ public class SimulationEngine implements IStateChangeObserver {
 
         deadAnimals = new LinkedList<>();
 
-        grassGrows();
+        for(int i = 0; i < amountOfGrassPerSectorOnStart; i++) {
+            grassGrows();
+        }
+
         saveStatistics();
     }
 
 
-    public void followAnimalFor(int numberOfEpochs, int id) {
-        followedEpochsLeft = numberOfEpochs ;
-        followedAnimal = animals.get(id);
-        followedDeathEpoch = null;
-        startChildren = followedAnimal.getChildCount();
-        startDescendants = followedAnimal.getSumOfDescendants();
-        followedEpoch = epochNumber.get();
-
-
-    }
+    // SIMULATION
 
     public void runDay() {
 
@@ -146,9 +148,9 @@ public class SimulationEngine implements IStateChangeObserver {
             if((!followedAnimal.isAlive())&&(followedDeathEpoch == null)) followedDeathEpoch = epochNumber.get();
             followedEpochsLeft--;
         }
-
-
     }
+
+    // ANIMAL/FIELD SIMULATION
 
     @Override
     public void stateChanged(Vector2d oldPosition, Vector2d newPosition, Animal examined) {
@@ -179,12 +181,13 @@ public class SimulationEngine implements IStateChangeObserver {
 
     }
 
-    private void grassGrows() {
-        Vector2d junglePosition = map.randomFreePosition(true);
-        Vector2d steppePosition = map.randomFreePosition(false);
-
-        if(junglePosition != null) map.addGrass(new Grass(junglePosition, grassEatingProfit));
-        if(steppePosition != null) map.addGrass(new Grass(steppePosition, grassEatingProfit));
+    public void followAnimalFor(int numberOfEpochs, int id) {
+        followedEpochsLeft = numberOfEpochs ;
+        followedAnimal = animals.get(id);
+        followedDeathEpoch = null;
+        startChildren = followedAnimal.getChildCount();
+        startDescendants = followedAnimal.getSumOfDescendants();
+        followedEpoch = epochNumber.get();
     }
 
     private void simulateField(Vector2d field) {
@@ -241,16 +244,15 @@ public class SimulationEngine implements IStateChangeObserver {
 
                 animals.put(index.get(), first.copulateWith(second, reproductionCost, randomDirection(),
                         index.getAndIncrement(), epochNumber.get()));
-                        // it doesn't change sumOfEnergy on map so it is unnecessary to change it
+                // it doesn't change sumOfEnergy on map so it is unnecessary to change it
                 sumOfLivingAnimalsChildren += 2; // Each of parents has one child more
                 amountOfLivingAnimals ++;
                 animals.get(newBornIndex).addObserver(this);
 
             }
         }
-
-
     }
+
     private void removeDeadAnimals() {
 
         map.removeDeadAnimals();
@@ -258,6 +260,8 @@ public class SimulationEngine implements IStateChangeObserver {
             animals.remove(deadAnimal.getID());
         }
     }
+
+    // STATISTICS
 
     private void saveStatistics() {
 
@@ -267,7 +271,7 @@ public class SimulationEngine implements IStateChangeObserver {
         if(deadAnimalsCount == 0) averageLifetimeForDead = 0;
 
         else averageLifetimeForDead = ((stats.getAverageLifeLength() * (double)(deadAnimalsCount - deadAnimals.size()))
-            + totalLifeLengthForDead )/(double)deadAnimalsCount;
+                + totalLifeLengthForDead )/(double)deadAnimalsCount;
 
 
         if(amountOfLivingAnimals > 0) {
@@ -293,32 +297,6 @@ public class SimulationEngine implements IStateChangeObserver {
             geneTotalSumOfOccur.replace(gene, occurTimes + updateGene.get(gene));
         }
 
-
-
-
-
-    }
-
-    public Statistics getStats() {
-        return stats;
-    }
-
-    public FollowedAnimalStats getFollowedAnimal() {
-
-        if(followedEpochsLeft > 0) {
-
-            return new FollowedAnimalStats(epochNumber.get() - followedEpoch,
-                    followedAnimal.getGenotype(),
-                    followedAnimal.getChildCount() - startChildren,
-                    followedAnimal.getSumOfDescendants() - startDescendants,
-                    followedDeathEpoch);
-
-        }
-        else return null;
-    }
-
-    public EvolutionGeneratorMap getMap() {
-        return map;
     }
 
     public void saveStatsTxt(int mapNumber) {
@@ -353,11 +331,44 @@ public class SimulationEngine implements IStateChangeObserver {
             System.exit(-1);
         }
 
-
-
-
-
     }
+
+    // GRASS SIMULATION
+
+    private void grassGrows() {
+        Vector2d junglePosition = map.randomFreePosition(true);
+        Vector2d steppePosition = map.randomFreePosition(false);
+
+        if(junglePosition != null) map.addGrass(new Grass(junglePosition, grassEatingProfit));
+        if(steppePosition != null) map.addGrass(new Grass(steppePosition, grassEatingProfit));
+    }
+
+
+    // GETTERS
+
+    public Statistics getStats() {
+        return stats;
+    }
+
+    public FollowedAnimalStats getFollowedAnimal() {
+
+        if(followedEpochsLeft > 0) {
+
+            return new FollowedAnimalStats(epochNumber.get() - followedEpoch,
+                    followedAnimal.getGenotype(),
+                    followedAnimal.getChildCount() - startChildren,
+                    followedAnimal.getSumOfDescendants() - startDescendants,
+                    followedDeathEpoch);
+
+        }
+        else return null;
+    }
+
+    public EvolutionGeneratorMap getMap() {
+        return map;
+    }
+
+
 
 
 }

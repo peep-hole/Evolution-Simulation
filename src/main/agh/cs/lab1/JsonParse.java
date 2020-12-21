@@ -21,8 +21,12 @@ public class JsonParse {
 
     public JsonParse(String filename) throws IOException, ParseException {
 
+        // PARSING PARAMETERS FROM JSON
+
         Object object = new JSONParser().parse(new FileReader(filename));
         JSONObject jsonObject = (JSONObject)object;
+
+        // SIMULATION PARAMETERS
 
         width = (long) jsonObject.get("width");
         height = (long)jsonObject.get("height");
@@ -30,6 +34,8 @@ public class JsonParse {
         moveEnergy = (long)jsonObject.get("moveEnergy");
         plantEnergy = (long)jsonObject.get("plantEnergy");
         jungleRatio = (double)jsonObject.get("jungleRatio");
+
+        // CHECKING PARAMETERS
 
         if(       (width <= 0)
                 ||(height <=0)
@@ -39,12 +45,6 @@ public class JsonParse {
                 || jungleRatio < 0) {
             throw new IllegalArgumentException("incorrect arguments passed to json");
         }
-
-
-    }
-
-    public long getWidth() {
-        return width;
     }
 
 

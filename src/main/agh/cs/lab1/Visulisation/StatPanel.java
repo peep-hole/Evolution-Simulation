@@ -5,21 +5,17 @@ import agh.cs.lab1.Utilities.Genes;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-public class StatPanel extends JPanel implements ActionListener {
+public class StatPanel extends JPanel {
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
-    private Statistics stats;
-    private JButton getStatsButton;
-    private JButton showDominanceButton;
-    private SimulationLauncher launcher;
-
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
+    private final Statistics stats;
+    private final JButton getStatsButton;
+    private final JButton showDominanceButton;
 
 
     public StatPanel(int x, int y, int width, int height, Statistics stats, SimulationLauncher launcher) {
@@ -28,27 +24,20 @@ public class StatPanel extends JPanel implements ActionListener {
         this.width = width;
         this.height = height;
         this.stats = stats;
-        this.launcher = launcher;
+
+        // GET STATS BUTTON SETTINGS
 
         getStatsButton = new JButton("Get stats.txt");
         getStatsButton.setFocusable(false);
         getStatsButton.setBounds(20, 100, 150, 20);
-        getStatsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                launcher.generateStatsTxt();
-            }
-        });
+        getStatsButton.addActionListener(e -> launcher.generateStatsTxt());
+
+        // SHOW DOMINANCE BUTTON SETTINGS
 
         showDominanceButton = new JButton("Show animals with dominating genotype");
         showDominanceButton.setFocusable(false);
         showDominanceButton.setBounds(200, 100, 280, 20);
-        showDominanceButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                launcher.showDominating();
-            }
-        });
+        showDominanceButton.addActionListener(e -> launcher.showDominating());
     }
 
     @Override
@@ -82,11 +71,6 @@ public class StatPanel extends JPanel implements ActionListener {
         g.drawString("Average life length: " + stats.getAverageLifeLength(), 20, 350);
 
         g.drawString("Average children amount: " + stats.getAverageChildAmount(), 20, 380);
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
     }
 }

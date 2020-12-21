@@ -1,7 +1,5 @@
 package agh.cs.lab1.Utilities;
 
-import java.util.Random;
-
 public class Vector2d {
 
     public final int x;

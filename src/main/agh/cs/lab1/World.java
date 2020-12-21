@@ -1,6 +1,5 @@
 package agh.cs.lab1;
 
-import agh.cs.lab1.Simulation.SimulationEngine;
 import agh.cs.lab1.Visulisation.SimulationLauncher;
 import org.json.simple.parser.ParseException;
 
@@ -17,16 +16,17 @@ public class World {
 
     public static void main(String[] args) {
 
+        // PARSING AND GETTING PARAMETERS
+
         parser = null;
         try {
             parser = new JsonParse("parameters.json");
-        }catch (IOException e) {
-            System.out.print(e);
-            System.exit(-1);
-        }catch (ParseException e) {
-            System.out.println(e);
+        }catch (IOException | ParseException e) {
+            e.getStackTrace();
             System.exit(-1);
         }
+
+        // ONE OR TWO MAPS OPTION CHOOSER SETTINGS
 
         JFrame frame = new JFrame("Run Options");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -35,22 +35,16 @@ public class World {
 
         JButton singleButton = new JButton("Run Single Map");
         singleButton.setBounds(50, 20, 200, 30);
-        singleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                runSingle();
-            }
+        singleButton.addActionListener(e -> {
+            frame.dispose();
+            runSingle();
         });
 
         JButton doubleButton = new JButton("Run Two Maps");
         doubleButton.setBounds(50, 60, 200, 30);
-        doubleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                runDouble();
-            }
+        doubleButton.addActionListener(e -> {
+            frame.dispose();
+            runDouble();
         });
 
         frame.add(singleButton);

@@ -1,0 +1,7 @@
+Epoch: 390
+Average Animal Amount: 911.474358974359
+Average Grass Amount: 393.0051282051282
+Average Energy Amount: 332.2585882733809
+Average Children Amount: 0.6611098169399703
+Average Life Length: 75.2970720962128
+Most popular genotype: 00000001111112233333444556666777

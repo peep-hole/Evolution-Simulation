@@ -23,6 +23,8 @@ public class Genes {
         this.genesHashCode = genesHashCode;
     }
 
+    // GENE CREATORS
+
     public static Genes createRandomGenotype() {
         Random generator = new Random();
         int[] genes = new int[genomeSize];
@@ -107,6 +109,8 @@ public class Genes {
 
     }
 
+    // GETTERS
+
     public int[] getGenotype() {
         return genotype;
     }
@@ -125,6 +129,8 @@ public class Genes {
         }
         return  hashCode;
     }
+
+    // GENES UTILS
 
     @Override
     public boolean equals(Object other) {

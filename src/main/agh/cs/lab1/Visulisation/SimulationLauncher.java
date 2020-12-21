@@ -12,26 +12,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-public class SimulationLauncher implements ActionListener {
+public class SimulationLauncher {
 
-    private SimulationEngine engine;
-    private JsonParse parsedValues;
+    private final SimulationEngine engine;
 
-    private JFrame frame;
-    private Timer timer;
-    private StatPanel statPanel;
-    private MapPanel mapPanel;
-    private JPanel controlPanel;
-    private FollowedAnimalPanel followedAnimalPanel;
+    private final Timer timer;
+    private final StatPanel statPanel;
+    private final MapPanel mapPanel;
+    private final FollowedAnimalPanel followedAnimalPanel;
     private boolean isStopped;
     private boolean isFollowing;
     private final int mapNumber;
 
+    private static final double animalStartRatio = 0.1;
+
     public SimulationLauncher(JsonParse parsedValues, int mapNumber) {
 
 
-        this.parsedValues = parsedValues;
-        int animalsOnStart = (int)(parsedValues.height* parsedValues.width*0.1);
+
+
+        int animalsOnStart = (int)(parsedValues.height* parsedValues.width * animalStartRatio);
         this.engine = new SimulationEngine((int)parsedValues.height,
                 (int)parsedValues.width,
                 (float)parsedValues.jungleRatio,
@@ -42,6 +42,12 @@ public class SimulationLauncher implements ActionListener {
 
         isFollowing = false;
         this.mapNumber = mapNumber;
+
+
+
+        // LAUNCHER COMPONENTS
+
+        // TIMER
 
         timer= new Timer(200, new ActionListener() {
             @Override
@@ -64,62 +70,55 @@ public class SimulationLauncher implements ActionListener {
             }
         });
 
-        frame = new JFrame("Evolution Simulator");
+        // MAIN FRAME
+
+        JFrame frame = new JFrame("Evolution Simulator");
         frame.setResizable(false);
         frame.setSize(1500, 1050);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-
-
-
+        // MAP PANEL
 
         mapPanel = new MapPanel(500, 50, 1000, 1000, engine.getMap(), this);
         mapPanel.setSize(1, 1);
 
+        // STAT PANEL
+
         statPanel = new StatPanel(0, 50, 500, 500, engine.getStats(), this);
         statPanel.setSize(1, 1);
+
+        // FOLLOWED ANIMAL PANEL
 
         followedAnimalPanel = new FollowedAnimalPanel(0, 550, 500, 500);
         followedAnimalPanel.setSize(1, 1);
 
-//        controlPanel = new ControlPanel(this);
-//        controlPanel.setSize(1, 1);
+        // CONTROL PANEL
 
-        controlPanel = new JPanel();
+        JPanel controlPanel = new JPanel();
         controlPanel.setBounds(0, 0, 1500, 50);
 
         JButton startStop = new JButton("Start/Stop");
         startStop.setBounds(500, 20, 500, 30);
         startStop.setFocusable(false);
-        startStop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startStop();
-            }
-        });
+        startStop.addActionListener(e -> startStop());
 
         controlPanel.add(startStop);
 
+        // MAIN FRAME ADDING COMPONENTS
 
         frame.add(mapPanel);
         frame.add(statPanel);
         frame.add(controlPanel);
         frame.add(followedAnimalPanel);
 
-
         frame.setVisible(true);
 
+        // ANIMATION STOP AT BEGINNING
 
         isStopped = true;
-
-
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
+    // START/STOP BUTTON ACTION
 
     public void startStop() {
         isStopped = !isStopped;
@@ -130,6 +129,8 @@ public class SimulationLauncher implements ActionListener {
             timer.stop();
         }
     }
+
+    // ANIMAL TO FOLLOW CHOOSER ACTION
 
     public void startFollowingAnimalAt(Vector2d position) {
 
@@ -194,30 +195,23 @@ public class SimulationLauncher implements ActionListener {
 
             JButton followButton = new JButton("Follow");
             followButton.setBounds(20, 320, 120, 50);
-            followButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    boolean read = false;
-                    int followEpochNumber = Integer.parseInt(textField.getText());
+            followButton.addActionListener(e -> {
+                int followEpochNumber = Integer.parseInt(textField.getText());
 
-                    engine.followAnimalFor(followEpochNumber, engine.getMap().getStrongestAnimalAt(position).getID());
-                    isFollowing = true;
-                    followedAnimalPanel.passAnimal(engine.getFollowedAnimal());
-                    followedAnimalPanel.repaint();
-                    optionFrame.dispose();
-                    isStopped = false;
-                    timer.start();
-                }
+                engine.followAnimalFor(followEpochNumber, engine.getMap().getStrongestAnimalAt(position).getID());
+                isFollowing = true;
+                followedAnimalPanel.passAnimal(engine.getFollowedAnimal());
+                followedAnimalPanel.repaint();
+                optionFrame.dispose();
+                isStopped = false;
+                timer.start();
             });
 
             JButton cancelButton = new JButton("Cancel");
             cancelButton.setBounds(260, 320, 120, 50);
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mapPanel.unsetFieldClicked();
-                    optionFrame.dispose();
-                }
+            cancelButton.addActionListener(e -> {
+                mapPanel.unsetFieldClicked();
+                optionFrame.dispose();
             });
 
             optionFrame.add(genotypeLabel);
@@ -233,12 +227,15 @@ public class SimulationLauncher implements ActionListener {
 
     }
 
+    // SHOW DOMINATING ANIMALS BUTTON ACTION
+
     public void showDominating() {
 
         mapPanel.setUnsetShowDominating();
         mapPanel.repaint();
-
     }
+
+    // GET STATS TXT BUTTON ACTION
 
     public void generateStatsTxt() {
         engine.saveStatsTxt(mapNumber);

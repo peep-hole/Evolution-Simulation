@@ -1,6 +1,5 @@
 package agh.cs.lab1.MapElements;
 
-import agh.cs.lab1.Enums.EnergyStatus;
 import agh.cs.lab1.Enums.MapDirection;
 import agh.cs.lab1.Utilities.Genes;
 import agh.cs.lab1.Maps.EvolutionGeneratorMap;
@@ -17,7 +16,6 @@ public class Animal implements IMapElement {
     private final EvolutionGeneratorMap map;
     private int energy;
     private final Genes genotype;
-    private final int startEnergy;
 
     private final LinkedList<Animal> children;
 
@@ -30,20 +28,24 @@ public class Animal implements IMapElement {
     public Animal(EvolutionGeneratorMap map, Vector2d position, MapDirection direction, Genes genes, int ID, int startEnergy, int birthEpoch) {
 
         observers = new LinkedList<>();
-        orientation = direction;
         this.map = map;
+
+        orientation = direction;
         this.position = position;
         genotype = genes;
         this.ID = ID;
         energy = startEnergy;
         this.birthEpoch = birthEpoch;
-        this.startEnergy = startEnergy;
+
         children = new LinkedList<>();
+
         this.map.place(this);
 
 
     }
 
+
+    // OBSERVER
 
     public void addObserver(IStateChangeObserver observer) {
         observers.add(observer);
@@ -59,22 +61,45 @@ public class Animal implements IMapElement {
         }
     }
 
+    // GETTERS
+
     public Vector2d getPosition() {
         return position;
-    }
-
-    public String toString(){
-        return String.valueOf(ID);
     }
 
     public int getEnergy() {
         return energy;
     }
 
-    public void eats(Grass grass) {
-        if(grass == null) throw new IllegalArgumentException("There is no grass to eat at position: " + position);
-        energy += grass.getNutritionalValue();
+    public int getChildCount() {
+        return children.size();
     }
+
+    public Genes getGenotype() {
+        return genotype;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public int getBirthEpoch() {
+        return birthEpoch;
+    }
+
+    public int getSumOfDescendants() {
+        int result = children.size();
+        for(Animal child : children) {
+            result += child.getSumOfDescendants();
+        }
+        return result;
+    }
+
+    public boolean isAlive() {
+        return energy > 0;
+    }
+
+    // MOVING
 
     public void rotateAndRun(int movingCost) {
 
@@ -90,6 +115,15 @@ public class Animal implements IMapElement {
         energy -= movingCost;
         positionChanged(oldPosition, position);
     }
+
+    // EATING
+
+    public void eats(Grass grass) {
+        if(grass == null) throw new IllegalArgumentException("There is no grass to eat at position: " + position);
+        energy += grass.getNutritionalValue();
+    }
+
+    // COPULATING
 
     public Animal copulateWith(Animal partner, double reproductionCost,
                                MapDirection orientation, int newID, int actualEpoch) {
@@ -110,27 +144,11 @@ public class Animal implements IMapElement {
 
     }
 
-    public int getChildCount() {
-        return children.size();
+    public void addChild(Animal animal) {
+        children.add(animal);
     }
 
-
-    public Genes getGenotype() {
-        return genotype;
-    }
-
-    public boolean isAlive() {
-        return energy > 0;
-    }
-
-    public int getID() {
-        return ID;
-    }
-
-    public int getBirthEpoch() {
-        return birthEpoch;
-    }
-
+    // UTILITIES
 
     @Override
     public boolean equals(Object other) {
@@ -149,16 +167,9 @@ public class Animal implements IMapElement {
         return (new Integer(getID())).hashCode();
     }
 
-    public void addChild(Animal animal) {
-        children.add(animal);
-    }
 
-    public int getSumOfDescendants() {
-        int result = children.size();
-        for(Animal child : children) {
-            result += child.getSumOfDescendants();
-        }
-        return result;
+    public String toString(){
+        return String.valueOf(ID);
     }
 
 }

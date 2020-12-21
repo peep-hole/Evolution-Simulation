@@ -20,41 +20,27 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
 
     private final Map<Vector2d, LinkedList<Animal>> animalMap;
     private final Map<Vector2d, Grass> grassMap;
-
+    private final Map<Genes, LinkedList<Animal>> genotypeRanking;
     private LinkedList<Animal> deadAnimals;
 
-    private long animalSteppeAmount;
     private long grassSteppeAmount;
-
-    private long animalJungleAmount;
     private long grassJungleAmount;
 
-    private final long steppeSquareSize;
-    private final long jungleSquareSize;
 
-    private final Map<Genes, LinkedList<Animal>> genotypeRanking;
 
     public EvolutionGeneratorMap(int width, int height, float jungleRatio) {
 
         upperRight = new Vector2d(width, height);
         lowerLeft = new Vector2d(0, 0);
 
-        int mapSquareSize = width * height;
-
         int xRatio = (int)Math.ceil((width * jungleRatio)/2);
         int yRatio = (int)Math.ceil((height * jungleRatio)/2);
-
-        jungleSquareSize = xRatio * 2 * yRatio * 2;
-        steppeSquareSize = mapSquareSize - jungleSquareSize;
 
         jungleLowerLeft = new Vector2d((width/2)-1-xRatio, (height/2)-1-yRatio);
         jungleUpperRight = new Vector2d((width/2)-1+xRatio, (height/2)-1+yRatio);
 
         animalMap = new HashMap<>();
         grassMap = new HashMap<>();
-
-        animalJungleAmount = 0;
-        animalSteppeAmount = 0;
 
         grassJungleAmount = 0;
         grassSteppeAmount = 0;
@@ -64,6 +50,96 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
         genotypeRanking = new HashMap<>();
 
     }
+
+    // GETTERS
+
+    public Vector2d getUpperRightCorner() {
+        return upperRight;
+    }
+
+    public Vector2d getLowerLeftCorner() {
+        return lowerLeft;
+    }
+
+    public Vector2d getJungleUpperRight() {
+        return jungleUpperRight;
+    }
+
+    public Vector2d getJungleLowerLeft() {
+        return jungleLowerLeft;
+    }
+
+    public LinkedList<Animal> listOfAnimalsAt(Vector2d position) {
+        return animalMap.get(position);
+    }
+
+    public boolean isGrassAt(Vector2d position) {
+        return grassMap.containsKey(position);
+    }
+
+    public LinkedList<Genes> getLeadingGenes() {
+        LinkedList<Genes> result = new LinkedList<>();
+        int popularity = 0;
+        for(Genes gene : genotypeRanking.keySet()) {
+            int geneCount = genotypeRanking.get(gene).size();
+            if(geneCount > popularity) {
+                result.clear();
+                result.add(gene);
+                popularity = geneCount;
+            }
+            else if(geneCount == popularity) {
+                result.add(gene);
+            }
+        }
+        return result;
+    }
+
+    public LinkedList<Animal> getDominatingGenotypeAnimals() {
+        LinkedList<Animal> result = new LinkedList<>();
+        LinkedList<Genes> dominatingGenes = getLeadingGenes();
+        for(Genes gene : dominatingGenes) {
+            result.addAll(genotypeRanking.get(gene));
+        }
+        return result;
+    }
+
+    public long getGrassAmount() {
+        return grassJungleAmount + grassSteppeAmount;
+    }
+
+    public Animal getStrongestAnimalAt(Vector2d position) {
+        if(!isOccupied(position)) return null;
+        Animal result = null;
+        for(Animal animal : listOfAnimalsAt(position)) {
+            if((result == null)||(result.getEnergy() < animal.getEnergy())) result = animal;
+        }
+
+        return result;
+    }
+
+    public LinkedList<Animal> getListAnimal() {
+
+        LinkedList<Animal> result = new LinkedList<>();
+        for(LinkedList<Animal> list : animalMap.values()) {
+            result.addAll(list);
+        }
+        return result;
+    }
+
+    public LinkedList<Grass> getListGrass() {
+
+        return new LinkedList<>(grassMap.values());
+    }
+
+    public HashMap<Genes, Integer> getSumOfGeneOccur() {
+        HashMap<Genes,Integer> result = new HashMap<>();
+        for(Genes gene : genotypeRanking.keySet()) {
+            result.put(gene, genotypeRanking.get(gene).size());
+        }
+        return result;
+    }
+
+    // RANDOM POSITION/VECTOR GETTERS
 
     public Vector2d randomFreePosition(boolean isJungle) {
 
@@ -133,21 +209,7 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
 
     }
 
-    public Vector2d getUpperRightCorner() {
-        return upperRight;
-    }
-
-    public Vector2d getLowerLeftCorner() {
-        return lowerLeft;
-    }
-
-    public Vector2d getJungleUpperRight() {
-        return jungleUpperRight;
-    }
-
-    public Vector2d getJungleLowerLeft() {
-        return jungleLowerLeft;
-    }
+    // FUNCTIONS OF MAP/POSITION STATE
 
     public boolean isOccupied(Vector2d position) {
         List<Animal> animals = animalMap.get(position);
@@ -158,6 +220,13 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
         return((!isOccupied(position))&&(!isGrassAt(position)));
     }
 
+    public boolean isInJungle(Vector2d position) {
+        return (position.follows(jungleLowerLeft))&&(position.precedes(jungleUpperRight));
+    }
+
+
+    // ADDING/REMOVING ELEMENTS
+
     public void place(Animal animal) {
 
         Vector2d position = animal.getPosition();
@@ -166,19 +235,12 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
 
         animalMap.get(position).add(animal);
 
-        if(isInJungle(position)) animalJungleAmount++;
-        else animalSteppeAmount++;
-
         animal.addObserver(this);
 
 
         genotypeRanking.computeIfAbsent(animal.getGenotype(), k -> new LinkedList<>());
         genotypeRanking.get(animal.getGenotype()).add(animal);
 
-    }
-
-    public boolean isInJungle(Vector2d position) {
-        return (position.follows(jungleLowerLeft))&&(position.precedes(jungleUpperRight));
     }
 
     public void removeAnimal(Animal animal) {
@@ -190,10 +252,6 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
         animalMap.get(position).remove(animal);
 
         if(animalMap.get(position).size() == 0) animalMap.remove(position);
-
-
-        if(isInJungle(position)) animalJungleAmount--;
-        else animalSteppeAmount--;
 
         Genes genotype = animal.getGenotype();
         genotypeRanking.get(genotype).remove(animal);
@@ -248,30 +306,7 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
 
     }
 
-    public LinkedList<Animal> listOfAnimalsAt(Vector2d position) {
-        return animalMap.get(position);
-    }
-
-    public boolean isGrassAt(Vector2d position) {
-        return grassMap.containsKey(position);
-    }
-
-    public Vector2d calculateNewPosition(MapDirection orientation, Vector2d oldPosition) {
-
-         Vector2d wantedPosition = oldPosition.add(orientation.toUnitVector());
-
-        if(!wantedPosition.precedes(upperRight)) {
-            if(wantedPosition.x > upperRight.x) wantedPosition = new Vector2d(lowerLeft.x, wantedPosition.y);
-            if(wantedPosition.y > upperRight.y) wantedPosition = new Vector2d(wantedPosition.x, lowerLeft.y);
-        }
-        if(!wantedPosition.follows(getLowerLeftCorner())) {
-            if(wantedPosition.x < lowerLeft.x) wantedPosition = new Vector2d(upperRight.x, wantedPosition.y);
-            if(wantedPosition.y < lowerLeft.y) wantedPosition = new Vector2d(wantedPosition.x, upperRight.y);
-        }
-
-        return wantedPosition;
-
-    }
+    // STATUS CHANGE ANIMAL FUNCTIONS
 
     @Override
     public void stateChanged(Vector2d oldPosition, Vector2d newPosition, Animal animal) {
@@ -295,70 +330,25 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
 
     }
 
-    public LinkedList<Genes> getLeadingGenes() {
-        LinkedList<Genes> result = new LinkedList<>();
-        int popularity = 0;
-        for(Genes gene : genotypeRanking.keySet()) {
-            int geneCount = genotypeRanking.get(gene).size();
-            if(geneCount > popularity) {
-                result.clear();
-                result.add(gene);
-                popularity = geneCount;
-            }
-            else if(geneCount == popularity) {
-                result.add(gene);
-            }
+    // MAP UTIL
+
+    public Vector2d calculateNewPosition(MapDirection orientation, Vector2d oldPosition) {
+
+         Vector2d wantedPosition = oldPosition.add(orientation.toUnitVector());
+
+        if(!wantedPosition.precedes(upperRight)) {
+            if(wantedPosition.x > upperRight.x) wantedPosition = new Vector2d(lowerLeft.x, wantedPosition.y);
+            if(wantedPosition.y > upperRight.y) wantedPosition = new Vector2d(wantedPosition.x, lowerLeft.y);
         }
-        return result;
-    }
-
-    public LinkedList<Animal> getDominatingGenotypeAnimals() {
-        LinkedList<Animal> result = new LinkedList<>();
-        LinkedList<Genes> dominatingGenes = getLeadingGenes();
-        for(Genes gene : dominatingGenes) {
-            result.addAll(genotypeRanking.get(gene));
-        }
-        return result;
-    }
-
-    public long getGrassAmount() {
-        return grassJungleAmount + grassSteppeAmount;
-    }
-
-    public long getAnimalAmount() {
-        return animalJungleAmount + animalSteppeAmount;
-    }
-
-    public Animal getStrongestAnimalAt(Vector2d position) {
-        if(!isOccupied(position)) return null;
-        Animal result = null;
-        for(Animal animal : listOfAnimalsAt(position)) {
-            if((result == null)||(result.getEnergy() < animal.getEnergy())) result = animal;
+        if(!wantedPosition.follows(getLowerLeftCorner())) {
+            if(wantedPosition.x < lowerLeft.x) wantedPosition = new Vector2d(upperRight.x, wantedPosition.y);
+            if(wantedPosition.y < lowerLeft.y) wantedPosition = new Vector2d(wantedPosition.x, upperRight.y);
         }
 
-        return result;
+        return wantedPosition;
+
     }
 
-    public LinkedList<Animal> getListAnimal() {
 
-        LinkedList<Animal> result = new LinkedList<>();
-        for(LinkedList<Animal> list : animalMap.values()) {
-            result.addAll(list);
-        }
-        return result;
-    }
-
-    public LinkedList<Grass> getListGrass() {
-
-        return new LinkedList<>(grassMap.values());
-    }
-
-    public HashMap<Genes, Integer> getSumOfGeneOccur() {
-        HashMap<Genes,Integer> result = new HashMap<>();
-        for(Genes gene : genotypeRanking.keySet()) {
-            result.put(gene, genotypeRanking.get(gene).size());
-        }
-        return result;
-    }
 
 }
