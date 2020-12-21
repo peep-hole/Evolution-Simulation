@@ -21,6 +21,8 @@ public class MapPanel extends JPanel implements MouseListener {
     private EvolutionGeneratorMap map;
     private SimulationLauncher launcher;
     private boolean showDominating;
+    private int mapWidth;
+    private int mapHeight;
 
     private int xRatio;
     private int yRatio;
@@ -36,8 +38,8 @@ public class MapPanel extends JPanel implements MouseListener {
         this.launcher = launcher;
         showDominating = false;
 
-        int mapWidth = map.getUpperRightCorner().x - map.getLowerLeftCorner().x;
-        int mapHeight = map.getUpperRightCorner().y - map.getLowerLeftCorner().y;
+        mapWidth = map.getUpperRightCorner().x - map.getLowerLeftCorner().x;
+        mapHeight = map.getUpperRightCorner().y - map.getLowerLeftCorner().y;
 
         xRatio = width/mapWidth;
         yRatio = height/mapHeight;
@@ -54,8 +56,13 @@ public class MapPanel extends JPanel implements MouseListener {
         int jungleWidth = map.getJungleUpperRight().x - map.getJungleLowerLeft().x;
         int jungleHeight = map.getJungleUpperRight().y - map.getJungleLowerLeft().y;
 
-        g.setColor(new Color(0xDBDA48));
+        g.setColor(Color.BLACK);
         g.fillRect(0, 0, width, height);
+
+
+        g.setColor(new Color(0xDBDA48));
+        g.fillRect(0, 0, mapWidth*xRatio, mapHeight*yRatio);
+
 
 
         g.setColor(new Color(0x00AA57));
@@ -69,14 +76,14 @@ public class MapPanel extends JPanel implements MouseListener {
 
         g.setColor(new Color(0xFF9D9B));
         for(Animal animal : map.getListAnimal()) {
-            g.fillRoundRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio, xRatio, yRatio);
+            g.fillRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio);
 
         }
 
         if((showDominating)&&(map.getLeadingGenes().size() == 1)) {
             g.setColor(Color.BLACK);
             for(Animal animal : map.getDominatingGenotypeAnimals()) {
-                g.fillRoundRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio, xRatio, yRatio);
+                g.fillRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio);
             }
 
         }

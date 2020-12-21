@@ -32,7 +32,7 @@ public class StatPanel extends JPanel implements ActionListener {
 
         getStatsButton = new JButton("Get stats.txt");
         getStatsButton.setFocusable(false);
-        getStatsButton.setBounds(20, 30, 150, 20);
+        getStatsButton.setBounds(20, 100, 150, 20);
         getStatsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,7 +42,7 @@ public class StatPanel extends JPanel implements ActionListener {
 
         showDominanceButton = new JButton("Show animals with dominating genotype");
         showDominanceButton.setFocusable(false);
-        showDominanceButton.setBounds(200, 30, 280, 20);
+        showDominanceButton.setBounds(200, 100, 280, 20);
         showDominanceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -58,30 +58,30 @@ public class StatPanel extends JPanel implements ActionListener {
         this.setBounds(x, y, width, height);
 
         g.setFont(new Font(null, Font.BOLD, 20));
-        g.drawString("Statistics", 200, 15);
+        g.drawString("Statistics", 200, 150);
 
         this.add(getStatsButton);
         this.add(showDominanceButton);
 
         g.setFont(new Font(null, Font.BOLD, 15));
 
-        g.drawString("Epoch: " + stats.getEpoch(), 20, 100);
+        g.drawString("Epoch: " + stats.getEpoch(), 20, 200);
 
-        g.drawString("Total animal amount: " + stats.getTotalAnimalAmount(), 20, 130);
+        g.drawString("Total animal amount: " + stats.getTotalAnimalAmount(), 20, 230);
 
-        g.drawString("Total grass amount: " + stats.getTotalGrassAmount(), 20, 160);
+        g.drawString("Total grass amount: " + stats.getTotalGrassAmount(), 20, 260);
 
         LinkedList<Genes> dominatingGenes = stats.getDominatingGenes();
         if(dominatingGenes.size() == 1) {
-            g.drawString("Dominating Genes : " + dominatingGenes.get(0), 20, 190);
+            g.drawString("Dominating Genes : " + dominatingGenes.get(0), 20, 290);
         }
-        else g.drawString("Dominating Genes : None" , 20, 190);
+        else g.drawString("Dominating Genes : None" , 20, 290);
 
-        g.drawString("Average energy: " + stats.getAverageEnergy(), 20, 220);
+        g.drawString("Average energy: " + stats.getAverageEnergy(), 20, 320);
 
-        g.drawString("Average life length: " + stats.getAverageLifeLength(), 20, 250);
+        g.drawString("Average life length: " + stats.getAverageLifeLength(), 20, 350);
 
-        g.drawString("Average children amount: " + stats.getAverageChildAmount(), 20, 280);
+        g.drawString("Average children amount: " + stats.getAverageChildAmount(), 20, 380);
 
     }
 

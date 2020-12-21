@@ -21,12 +21,13 @@ public class SimulationLauncher implements ActionListener {
     private Timer timer;
     private StatPanel statPanel;
     private MapPanel mapPanel;
-    private ControlPanel controlPanel;
+    private JPanel controlPanel;
     private FollowedAnimalPanel followedAnimalPanel;
     private boolean isStopped;
     private boolean isFollowing;
+    private final int mapNumber;
 
-    public SimulationLauncher(JsonParse parsedValues) {
+    public SimulationLauncher(JsonParse parsedValues, int mapNumber) {
 
 
         this.parsedValues = parsedValues;
@@ -40,6 +41,7 @@ public class SimulationLauncher implements ActionListener {
                 (int)parsedValues.startEnergy);
 
         isFollowing = false;
+        this.mapNumber = mapNumber;
 
         timer= new Timer(200, new ActionListener() {
             @Override
@@ -63,6 +65,7 @@ public class SimulationLauncher implements ActionListener {
         });
 
         frame = new JFrame("Evolution Simulator");
+        frame.setResizable(false);
         frame.setSize(1500, 1050);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -80,8 +83,23 @@ public class SimulationLauncher implements ActionListener {
         followedAnimalPanel = new FollowedAnimalPanel(0, 550, 500, 500);
         followedAnimalPanel.setSize(1, 1);
 
-        controlPanel = new ControlPanel(this);
-        controlPanel.setSize(1, 1);
+//        controlPanel = new ControlPanel(this);
+//        controlPanel.setSize(1, 1);
+
+        controlPanel = new JPanel();
+        controlPanel.setBounds(0, 0, 1500, 50);
+
+        JButton startStop = new JButton("Start/Stop");
+        startStop.setBounds(500, 20, 500, 30);
+        startStop.setFocusable(false);
+        startStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startStop();
+            }
+        });
+
+        controlPanel.add(startStop);
 
 
         frame.add(mapPanel);
@@ -223,6 +241,6 @@ public class SimulationLauncher implements ActionListener {
     }
 
     public void generateStatsTxt() {
-        engine.saveStatsTxt();
+        engine.saveStatsTxt(mapNumber);
     }
 }

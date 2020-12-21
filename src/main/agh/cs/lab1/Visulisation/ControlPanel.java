@@ -18,6 +18,8 @@ public class ControlPanel extends JPanel implements ActionListener {
     @Override
     public void paintComponent(Graphics g) {
 
+        super.paintComponent(g);
+
         button = new JButton("Start/Stop button");
         button.setFocusable(false);
         button.setBounds(650, 10, 200, 30);

@@ -31,6 +31,15 @@ public class JsonParse {
         plantEnergy = (long)jsonObject.get("plantEnergy");
         jungleRatio = (double)jsonObject.get("jungleRatio");
 
+        if(       (width <= 0)
+                ||(height <=0)
+                ||(startEnergy < 0)
+                ||(moveEnergy < 0)
+                ||(plantEnergy < 0)
+                || jungleRatio < 0) {
+            throw new IllegalArgumentException("incorrect arguments passed to json");
+        }
+
 
     }
 

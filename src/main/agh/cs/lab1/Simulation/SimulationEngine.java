@@ -321,14 +321,15 @@ public class SimulationEngine implements IStateChangeObserver {
         return map;
     }
 
-    public void saveStatsTxt() {
+    public void saveStatsTxt(int mapNumber) {
 
         try{
 
 
-            FileWriter writer = new FileWriter("stats.txt");
+            FileWriter writer = new FileWriter("stats " + mapNumber +".txt");
 
-            writer.write("Average Animal Amount: " + (double)totalAnimalAverages/(double)epochNumber.get() + "\n");
+            writer.write("Epoch: " + epochNumber);
+            writer.write("\nAverage Animal Amount: " + (double)totalAnimalAverages/(double)epochNumber.get() + "\n");
             writer.write("Average Grass Amount: " + (double)totalGrassAverages/(double)epochNumber.get() + "\n");
             writer.write("Average Energy Amount: " + totalAverageEnergy/(double)epochNumber.get() + "\n");
             writer.write("Average Children Amount: " + totalChildrenCountAverages /(double)epochNumber.get() + "\n");
