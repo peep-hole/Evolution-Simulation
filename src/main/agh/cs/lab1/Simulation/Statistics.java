@@ -9,10 +9,11 @@ public class Statistics {
 
     private long totalAnimalAmount;
     private long totalGrassAmount;
-    private List<Genes> dominatingGenes;
+    private LinkedList<Genes> dominatingGenes;
     private double averageEnergy;
     private double averageLifeLength;
     private double averageChildAmount;
+    private int epoch;
 
     public Statistics() {
         totalAnimalAmount = 0;
@@ -23,14 +24,15 @@ public class Statistics {
         averageChildAmount = 0;
     }
 
-    public void updateStats( long totalAnimalAmount, long totalGrassAmount, List<Genes> dominatingGenes,
-                             double averageEnergy, double averageLifeLength, double averageChildAmount) {
+    public void updateStats( long totalAnimalAmount, long totalGrassAmount, LinkedList<Genes> dominatingGenes,
+                             double averageEnergy, double averageLifeLength, double averageChildAmount, int epoch) {
         this.totalAnimalAmount = totalAnimalAmount;
         this.totalGrassAmount = totalGrassAmount;
         this.dominatingGenes = dominatingGenes;
         this.averageEnergy = averageEnergy;
         this.averageLifeLength = averageLifeLength;
         this.averageChildAmount = averageChildAmount;
+        this.epoch = epoch;
     }
 
     public long getTotalAnimalAmount() {
@@ -41,7 +43,7 @@ public class Statistics {
         return totalGrassAmount;
     }
 
-    public List<Genes> getDominatingGenes() {
+    public LinkedList<Genes> getDominatingGenes() {
         return dominatingGenes;
     }
 
@@ -55,5 +57,9 @@ public class Statistics {
 
     public double getAverageChildAmount() {
         return averageChildAmount;
+    }
+
+    public int getEpoch() {
+        return epoch;
     }
 }

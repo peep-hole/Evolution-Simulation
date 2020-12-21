@@ -8,6 +8,10 @@ import agh.cs.lab1.Maps.EvolutionGeneratorMap;
 import agh.cs.lab1.Maps.IStateChangeObserver;
 import agh.cs.lab1.Utilities.Vector2d;
 
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,13 +39,25 @@ public class SimulationEngine implements IStateChangeObserver {
     private int totalLifeLengthForDead;
 
     private Animal followedAnimal;
-    private HashMap<Integer, Animal> followedFamily;
     private int followedEpochsLeft;
     private Integer followedDeathEpoch;
+    private int startChildren;
+    private int startDescendants;
+    private int followedEpoch;
+
+    // SUMMARY STATS
+
+    private int totalAnimalAverages;
+    private int totalGrassAverages;
+    private final Map<Genes, Integer> geneTotalSumOfOccur;
+    private double totalAverageEnergy;
+    private double finalTotalLifeLength;
+    private double totalChildrenCountAverages;
+
 
     private LinkedList<Animal> deadAnimals;
 
-    private AtomicInteger epochNumber;
+    private final AtomicInteger epochNumber;
 
     public SimulationEngine(int mapHeight, int mapWidth, float jungleRatio, int amountOfAnimalsOnStart, int moveCost,
                             int grassEatingProfit, int startEnergy) {
@@ -50,7 +66,16 @@ public class SimulationEngine implements IStateChangeObserver {
         animals = new HashMap<>();
         index = new AtomicInteger(0);
 
+        totalAnimalAverages = 0;
+        totalGrassAverages = 0;
+        geneTotalSumOfOccur = new HashMap<>();
+        totalAverageEnergy = 0.0;
+        finalTotalLifeLength = 0;
+        totalChildrenCountAverages = 0;
+
+
         amountOfLivingAnimals = amountOfAnimalsOnStart;
+        sumOfEnergy = 0;
 
         for(int i = 0; i < amountOfAnimalsOnStart; i++) {
             int id = index.get();
@@ -59,12 +84,13 @@ public class SimulationEngine implements IStateChangeObserver {
                     randomDirection(), Genes.createRandomGenotype(), index.getAndIncrement(), startEnergy, 0));
 
             animals.get(id).addObserver(this);
+            sumOfEnergy += animals.get(id).getEnergy();
         }
 
         this.grassEatingProfit = grassEatingProfit;
         this.moveCost = moveCost;
 
-        minimalEnergyForReproduction = (int)(startEnergy/2);
+        minimalEnergyForReproduction = (startEnergy/2);
         deadAnimalsCount = 0;
 
         stats = new Statistics();
@@ -76,27 +102,30 @@ public class SimulationEngine implements IStateChangeObserver {
         deadAnimals = new LinkedList<>();
 
         grassGrows();
+        saveStatistics();
     }
 
 
     public void followAnimalFor(int numberOfEpochs, int id) {
-        followedEpochsLeft = numberOfEpochs;
+        followedEpochsLeft = numberOfEpochs ;
         followedAnimal = animals.get(id);
-        followedFamily = new HashMap<>();
         followedDeathEpoch = null;
-        followedFamily.put(id, followedAnimal);
+        startChildren = followedAnimal.getChildCount();
+        startDescendants = followedAnimal.getSumOfDescendants();
+        followedEpoch = epochNumber.get();
+
 
     }
 
     public void runDay() {
-
-        System.out.println("---------Day: " + epochNumber.get() + "---------");
 
         epochNumber.incrementAndGet();
 
         totalLifeLengthForDead = 0;
         sumOfEnergy = 0;
         fieldsForSimulation = new HashSet<>();
+
+        sumOfLivingAnimalsChildren = 0;
 
         removeDeadAnimals();
         deadAnimals = new LinkedList<>();
@@ -118,7 +147,6 @@ public class SimulationEngine implements IStateChangeObserver {
             followedEpochsLeft--;
         }
 
-        // check if all animals are dead
 
     }
 
@@ -218,10 +246,6 @@ public class SimulationEngine implements IStateChangeObserver {
                 amountOfLivingAnimals ++;
                 animals.get(newBornIndex).addObserver(this);
 
-                if((followedEpochsLeft > 0)&&
-                        ((followedFamily.containsKey(first.getID()))||(followedFamily.containsKey(second.getID())))) {
-                    followedFamily.put(newBornIndex, animals.get(newBornIndex));
-                }
             }
         }
 
@@ -236,15 +260,41 @@ public class SimulationEngine implements IStateChangeObserver {
     }
 
     private void saveStatistics() {
-        double averageLifetimeForDead = ((stats.getAverageLifeLength() * (deadAnimalsCount - deadAnimals.size()))
-        + totalLifeLengthForDead * deadAnimals.size()) / deadAnimalsCount;
+
+        double averageLifetimeForDead;
+
+
+        if(deadAnimalsCount == 0) averageLifetimeForDead = 0;
+
+        else averageLifetimeForDead = ((stats.getAverageLifeLength() * (double)(deadAnimalsCount - deadAnimals.size()))
+            + totalLifeLengthForDead )/(double)deadAnimalsCount;
+
 
         if(amountOfLivingAnimals > 0) {
-            stats.updateStats(amountOfLivingAnimals, map.getGrassAmount(), map.getLeadingGenes(), ((double)sumOfEnergy/(double)amountOfLivingAnimals), ((double)sumOfLivingAnimalsChildren/(double)amountOfLivingAnimals), averageLifetimeForDead);
+
+            double avgChild = (double) (sumOfLivingAnimalsChildren) / (double) (amountOfLivingAnimals);
+
+            stats.updateStats(amountOfLivingAnimals, map.getGrassAmount(), map.getLeadingGenes(), ((double)sumOfEnergy/(double)amountOfLivingAnimals), averageLifetimeForDead, avgChild, epochNumber.get());
         }
         else {
-            stats.updateStats(amountOfLivingAnimals, map.getGrassAmount(), map.getLeadingGenes(), 0, 0, averageLifetimeForDead);
+            stats.updateStats(amountOfLivingAnimals, map.getGrassAmount(), map.getLeadingGenes(), 0, averageLifetimeForDead, 0, epochNumber.get());
         }
+
+        totalAnimalAverages += stats.getTotalAnimalAmount();
+        totalGrassAverages += stats.getTotalGrassAmount();
+        totalAverageEnergy += stats.getAverageEnergy();
+        totalChildrenCountAverages += stats.getAverageChildAmount();
+        finalTotalLifeLength += stats.getAverageLifeLength();
+
+        HashMap<Genes, Integer> updateGene = map.getSumOfGeneOccur();
+        for(Genes gene : updateGene.keySet()) {
+            geneTotalSumOfOccur.putIfAbsent(gene, 0);
+            int occurTimes = geneTotalSumOfOccur.get(gene);
+            geneTotalSumOfOccur.replace(gene, occurTimes + updateGene.get(gene));
+        }
+
+
+
 
 
     }
@@ -257,13 +307,11 @@ public class SimulationEngine implements IStateChangeObserver {
 
         if(followedEpochsLeft > 0) {
 
-            int descendantsNumber = 0;
-            for(int id : followedFamily.keySet()) {
-                descendantsNumber += animals.get(id).getChildCount();
-            }
-
-            return new FollowedAnimalStats(epochNumber.get(), followedAnimal.getGenotype(),
-                    followedAnimal.getChildCount(), descendantsNumber, followedDeathEpoch);
+            return new FollowedAnimalStats(epochNumber.get() - followedEpoch,
+                    followedAnimal.getGenotype(),
+                    followedAnimal.getChildCount() - startChildren,
+                    followedAnimal.getSumOfDescendants() - startDescendants,
+                    followedDeathEpoch);
 
         }
         else return null;
@@ -273,8 +321,42 @@ public class SimulationEngine implements IStateChangeObserver {
         return map;
     }
 
-    public int getEpoch() {
-        return epochNumber.get();
+    public void saveStatsTxt() {
+
+        try{
+
+
+            FileWriter writer = new FileWriter("stats.txt");
+
+            writer.write("Average Animal Amount: " + (double)totalAnimalAverages/(double)epochNumber.get() + "\n");
+            writer.write("Average Grass Amount: " + (double)totalGrassAverages/(double)epochNumber.get() + "\n");
+            writer.write("Average Energy Amount: " + totalAverageEnergy/(double)epochNumber.get() + "\n");
+            writer.write("Average Children Amount: " + totalChildrenCountAverages /(double)epochNumber.get() + "\n");
+            writer.write("Average Life Length: " + finalTotalLifeLength/(double)epochNumber.get() + "\n");
+
+
+            Genes leader = null;
+
+            for(Genes gene : geneTotalSumOfOccur.keySet()) {
+                if((leader == null)||(geneTotalSumOfOccur.get(gene) > geneTotalSumOfOccur.get(gene))) {
+                    leader = gene;
+                }
+            }
+
+            writer.write("Most popular genotype: " + leader + "\n");
+
+            writer.close();
+
+        }catch(IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+
+
+
+
     }
+
 
 }

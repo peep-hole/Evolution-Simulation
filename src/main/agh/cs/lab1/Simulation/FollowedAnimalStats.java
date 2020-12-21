@@ -9,7 +9,7 @@ public class FollowedAnimalStats {
     public final int descendantsAmount;
     public final Integer deathEpoch;
 
-    public FollowedAnimalStats(int epoch, Genes genotype, int childrenAmount, int descendantsAmount, int deathEpoch) {
+    public FollowedAnimalStats(int epoch, Genes genotype, int childrenAmount, int descendantsAmount, Integer deathEpoch) {
 
         this.epoch = epoch;
         this.genotype = genotype;

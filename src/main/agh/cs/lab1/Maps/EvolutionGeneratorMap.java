@@ -339,4 +339,26 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
         return result;
     }
 
+    public LinkedList<Animal> getListAnimal() {
+
+        LinkedList<Animal> result = new LinkedList<>();
+        for(LinkedList<Animal> list : animalMap.values()) {
+            result.addAll(list);
+        }
+        return result;
+    }
+
+    public LinkedList<Grass> getListGrass() {
+
+        return new LinkedList<>(grassMap.values());
+    }
+
+    public HashMap<Genes, Integer> getSumOfGeneOccur() {
+        HashMap<Genes,Integer> result = new HashMap<>();
+        for(Genes gene : genotypeRanking.keySet()) {
+            result.put(gene, genotypeRanking.get(gene).size());
+        }
+        return result;
+    }
+
 }

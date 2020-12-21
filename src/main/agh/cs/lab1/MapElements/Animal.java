@@ -19,11 +19,11 @@ public class Animal implements IMapElement {
     private final Genes genotype;
     private final int startEnergy;
 
+    private final LinkedList<Animal> children;
+
     private final int ID;
 
     private final List<IStateChangeObserver> observers;
-
-    private int childCount;
 
     private final int birthEpoch;
 
@@ -36,9 +36,9 @@ public class Animal implements IMapElement {
         genotype = genes;
         this.ID = ID;
         energy = startEnergy;
-        childCount = 0;
         this.birthEpoch = birthEpoch;
         this.startEnergy = startEnergy;
+        children = new LinkedList<>();
         this.map.place(this);
 
 
@@ -99,16 +99,19 @@ public class Animal implements IMapElement {
         this.energy -= (int)(reproductionCost * energy);
         partner.energy -= (int)(reproductionCost * partner.energy);
 
-        this.childCount ++;
-        partner.childCount ++;
 
-        return new Animal(map, map.getRandomFreePositionAround(position), orientation,
+        Animal animal = new Animal(map, map.getRandomFreePositionAround(position), orientation,
                 Genes.createInheritedGenotype(genotype, partner.getGenotype()), newID, cumulatedEnergy, actualEpoch);
+
+        this.addChild(animal);
+        partner.addChild(animal);
+
+        return animal;
 
     }
 
     public int getChildCount() {
-        return childCount;
+        return children.size();
     }
 
 
@@ -128,19 +131,6 @@ public class Animal implements IMapElement {
         return birthEpoch;
     }
 
-    public EnergyStatus getEnergyStatus() {
-        if(10*energy > 6*startEnergy) {
-            return EnergyStatus.HIGH;
-        }
-        else if(10*energy > 3*startEnergy) {
-            return EnergyStatus.MEDIUM;
-        }
-        else if(energy > 0) {
-            return EnergyStatus.LOW;
-        }
-        else return EnergyStatus.DEAD;
-
-    }
 
     @Override
     public boolean equals(Object other) {
@@ -157,6 +147,18 @@ public class Animal implements IMapElement {
     @Override
     public int hashCode() {
         return (new Integer(getID())).hashCode();
+    }
+
+    public void addChild(Animal animal) {
+        children.add(animal);
+    }
+
+    public int getSumOfDescendants() {
+        int result = children.size();
+        for(Animal child : children) {
+            result += child.getSumOfDescendants();
+        }
+        return result;
     }
 
 }

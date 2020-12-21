@@ -1,79 +1,132 @@
 package agh.cs.lab1.Visulisation;
 
+import agh.cs.lab1.MapElements.Animal;
+import agh.cs.lab1.MapElements.Grass;
 import agh.cs.lab1.Maps.EvolutionGeneratorMap;
-import agh.cs.lab1.Simulation.SimulationLauncher;
+import agh.cs.lab1.Utilities.Genes;
 import agh.cs.lab1.Utilities.Vector2d;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.LinkedList;
 
-public class MapPanel extends JPanel {
+public class MapPanel extends JPanel implements MouseListener {
 
-    private SimulationLauncher launcher;
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
     private int width;
     private int height;
-    private final int mapWidth;
-    private final int mapHeight;
-    private final int xRatio;
-    private final int yRatio;
     private EvolutionGeneratorMap map;
+    private SimulationLauncher launcher;
+    private boolean showDominating;
 
-    private FieldPanel[][] labels;
+    private int xRatio;
+    private int yRatio;
 
-    public MapPanel(int x, int y, int width, int height, SimulationLauncher launcher) {
+    private boolean isFieldClicked = false;
+
+    public MapPanel(int x, int y, int width, int height, EvolutionGeneratorMap map, SimulationLauncher launcher) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.map = map;
         this.launcher = launcher;
+        showDominating = false;
 
-        map = launcher.getMap();
+        int mapWidth = map.getUpperRightCorner().x - map.getLowerLeftCorner().x;
+        int mapHeight = map.getUpperRightCorner().y - map.getLowerLeftCorner().y;
 
-        mapWidth = map.getUpperRightCorner().x - map.getLowerLeftCorner().x;
-        mapHeight = map.getUpperRightCorner().y - map.getLowerLeftCorner().y;
+        xRatio = width/mapWidth;
+        yRatio = height/mapHeight;
 
-        xRatio = width / mapWidth;
-        yRatio = height / mapHeight;
-
-        labels = new FieldPanel[mapWidth][mapHeight];
-
-        for(int xPos = 0; xPos < mapWidth; xPos++){
-            for(int yPos = 0; yPos < mapHeight; yPos++) {
-                Vector2d position = new Vector2d(xPos, yPos);
-                labels[xPos][yPos] = new FieldPanel(xPos*xRatio, yPos*yRatio, mapWidth, mapHeight,
-                        map.getStrongestAnimalAt(position), map.isInJungle(position), map.isGrassAt(position));
-            }
-        }
     }
 
     @Override
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
 
         this.setBounds(x, y, width, height);
 
-        for(int xPos = 0; xPos < mapWidth; xPos++){
-            for(int yPos = 0; yPos < mapHeight; yPos++) {
-                Vector2d position = new Vector2d(xPos, yPos);
-                labels[xPos][yPos].updateState(map.getStrongestAnimalAt(position), map.isInJungle(position), map.isGrassAt(position) );
-                labels[xPos][yPos].repaint();
-                this.add(labels[xPos][yPos]);
-            }
+
+        int jungleWidth = map.getJungleUpperRight().x - map.getJungleLowerLeft().x;
+        int jungleHeight = map.getJungleUpperRight().y - map.getJungleLowerLeft().y;
+
+        g.setColor(new Color(0xDBDA48));
+        g.fillRect(0, 0, width, height);
+
+
+        g.setColor(new Color(0x00AA57));
+        g.fillRect(map.getJungleLowerLeft().x * xRatio, map.getJungleLowerLeft().y * yRatio, jungleWidth* xRatio, jungleHeight * yRatio);
+
+
+        g.setColor(new Color(0x87FF48));
+        for(Grass grass : map.getListGrass()) {
+            g.fillRect(grass.getPosition().x * xRatio, grass.getPosition().y * yRatio, xRatio, yRatio);
         }
+
+        g.setColor(new Color(0xFF9D9B));
+        for(Animal animal : map.getListAnimal()) {
+            g.fillRoundRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio, xRatio, yRatio);
+
+        }
+
+        if((showDominating)&&(map.getLeadingGenes().size() == 1)) {
+            g.setColor(Color.BLACK);
+            for(Animal animal : map.getDominatingGenotypeAnimals()) {
+                g.fillRoundRect(animal.getPosition().x * xRatio, animal.getPosition().y * yRatio, xRatio, yRatio, xRatio, yRatio);
+            }
+
+        }
+
+        this.addMouseListener(this);
+
 
     }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
 
-//    public void repaintLabels() {
-//        for(int xPos = 0; xPos < mapWidth; xPos++){
-//            for(int yPos = 0; yPos < mapHeight; yPos++) {
-//                Vector2d position = new Vector2d(xPos, yPos);
-//                labels[xPos][yPos].updateState(map.getStrongestAnimalAt(position), map.isInJungle(position), map.isGrassAt(position) );
-//                labels[xPos][yPos].repaint();
-//            }
-//        }
-//    }
+        if(!isFieldClicked) {
+            int x = e.getX() / xRatio;
+            int y = e.getY() / yRatio;
+
+            isFieldClicked = true;
+            launcher.startFollowingAnimalAt(new Vector2d(x, y));
+
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    public void unsetFieldClicked() {
+        isFieldClicked = false;
+    }
+
+    public void setUnsetShowDominating() {
+
+        showDominating = !showDominating;
+    }
 }
