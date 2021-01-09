@@ -141,7 +141,7 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
 
     // RANDOM POSITION/VECTOR GETTERS
 
-    public Vector2d randomFreePosition(boolean isJungle) {
+    public Vector2d randomFreePosition(boolean isJungle) {  // czy to musi być public?
 
         Random generator = new Random();
         int limit = 10;
@@ -150,7 +150,7 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
         }
 
         else {
-           switch (generator.nextInt(4)) {
+           switch (generator.nextInt(4)) {  // rozkład prawdopodobieństwa
                case 0:
                    return findFreePosition(limit, lowerLeft, new Vector2d(jungleLowerLeft.x, jungleUpperRight.y));
                case 1:
@@ -177,11 +177,11 @@ public class EvolutionGeneratorMap implements IStateChangeObserver {
         else return null;
     }
 
-    public Vector2d randomVectorInRange(Vector2d lowerLeft, Vector2d upperRight) {
+    public Vector2d randomVectorInRange(Vector2d lowerLeft, Vector2d upperRight) {  // czy to musi być publiczne?
 
         if(lowerLeft.equals(upperRight)) return lowerLeft;
 
-        if((upperRight.x - lowerLeft.x == 0)||(upperRight.y- lowerLeft.y == 0)) return null;
+        if((upperRight.x - lowerLeft.x == 0)||(upperRight.y- lowerLeft.y == 0)) return null;    // nie czytelniej jest: (upperRight.y == lowerLeft.y) ?
 
         if(!lowerLeft.precedes(upperRight)) return null;
 

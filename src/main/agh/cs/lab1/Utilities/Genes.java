@@ -1,4 +1,4 @@
-package agh.cs.lab1.Utilities;
+package agh.cs.lab1.Utilities;  // zastanowiłbym się, czy geny to utilities
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.Random;
 public class Genes {
 
     private final int[] genotype;
-    private final static int genomeSize = 32;
+    private final static int genomeSize = 32;   // nazwa mogłaby być wielkimi literami (choć to nie publiczne pole)
     private final static int kindsOfGenes = 8; // if you change genomeSize or kindOfGenes => remember to change prime numbers
 
     private final static int[] primeNumbers = {29, 31, 37, 41, 43, 47, 53, 59}; // min(primeNumbers) + kindOfGenes - 1 > genomeSize
@@ -20,13 +20,13 @@ public class Genes {
         if(genotype.length != genomeSize) throw new IllegalArgumentException("Genotype length must be equal " +
                                                                     genomeSize + ", cannot be:" + genotype.length);
         this.genotype = genotype;
-        this.genesHashCode = genesHashCode;
+        this.genesHashCode = genesHashCode; // nie lepiej ten hash policzyć tutaj?
     }
 
     // GENE CREATORS
 
     public static Genes createRandomGenotype() {
-        Random generator = new Random();
+        Random generator = new Random();    // nowy obiekt co wywołanie
         int[] genes = new int[genomeSize];
 
         for(int i = 0; i < kindsOfGenes; i++) {
@@ -60,7 +60,7 @@ public class Genes {
         int upperBoarder = geneBorder1;
         int counter = 0;
 
-        for(int i =0; i < 3; i++) {
+        for(int i =0; i < 3; i++) { // ta pętla mnie pokonała - co to robi?
             if((counter != -2) && ((counter == 2) || (generator.nextInt(2) == 0))) {
                 for(int j = downBorder; j< upperBoarder; j++) {
                     resultGenotype[j] = parent1.getGenotype()[j];
@@ -96,7 +96,7 @@ public class Genes {
         int hashCode = getGeneHashCode(geneTypeCounter);
 
         for(int lackingGene : lackingGenes) {
-            int forSubstitution = excessiveGenes.get(generator.nextInt(excessiveGenes.size()));
+            int forSubstitution = excessiveGenes.get(generator.nextInt(excessiveGenes.size())); // rozkład prawodpodobieństwa
             for(int i = 0; i < resultGenotype.length; i++) {
                 if(resultGenotype[i] == forSubstitution) resultGenotype[i] = lackingGene;
             }
@@ -117,7 +117,7 @@ public class Genes {
 
     public int getRandomGene() {
         Random generator = new Random();
-        return genotype[generator.nextInt(32)];
+        return genotype[generator.nextInt(32)]; // czemu 32?
     }
 
     private static int getGeneHashCode(int[] geneTypeCounter) {

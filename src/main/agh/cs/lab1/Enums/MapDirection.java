@@ -1,27 +1,23 @@
-package agh.cs.lab1.Enums;
+package agh.cs.lab1.Enums;  // podział na pakiety powinien wynikać ze współzależności między klasami; to że coś jest enumem, to żaden wyróżnik
 
 import agh.cs.lab1.Utilities.Vector2d;
 
-import java.util.Map;
-import java.util.Random;
-
 public enum MapDirection {
-    NORTH("Północ", new Vector2d(0,1)),
-    NORTH_WEST("Północny-wschód", new Vector2d(1,1)),
-    WEST("Zachód", new Vector2d(-1,0)),
-    SOUTH_WEST("Południowy-wschód", new Vector2d(1,-1)),
-    SOUTH("Południe", new Vector2d(0,-1)),
+    NORTH("Północ", new Vector2d(0, 1)),
+    NORTH_WEST("Północny-wschód", new Vector2d(1, 1)),   // chyba inaczej rozumiemy słowo west
+    WEST("Zachód", new Vector2d(-1, 0)),
+    SOUTH_WEST("Południowy-wschód", new Vector2d(1, -1)),
+    SOUTH("Południe", new Vector2d(0, -1)),
     SOUTH_EAST("Południowy-wschód", new Vector2d(-1, -1)),
-    EAST("Wschód", new Vector2d(1,0)),
-    NORTH_EAST("Północny-zachód", new Vector2d(-1,1));
-
+    EAST("Wschód", new Vector2d(1, 0)),
+    NORTH_EAST("Północny-zachód", new Vector2d(-1, 1));
 
 
     private final Vector2d unitVector;
 
-    private final String direction;
+    private final String direction; // myląca nazwa
 
-    MapDirection(String stringRepresentation, Vector2d unitVector){
+    MapDirection(String stringRepresentation, Vector2d unitVector) {
         this.unitVector = unitVector;
         this.direction = stringRepresentation;
     }
@@ -29,8 +25,9 @@ public enum MapDirection {
     public String toString() {
         return this.direction;
     }
-    public MapDirection next(){
-        switch(this){
+
+    public MapDirection next() {
+        switch (this) {
             case NORTH:
                 return NORTH_EAST;
             case NORTH_EAST:
@@ -50,8 +47,9 @@ public enum MapDirection {
         }
         throw new IllegalArgumentException();
     }
-    public MapDirection previous(){
-        switch(this){
+
+    public MapDirection previous() {
+        switch (this) {
             case NORTH:
                 return NORTH_WEST;
             case NORTH_WEST:
@@ -71,11 +69,10 @@ public enum MapDirection {
         }
         throw new IllegalArgumentException();
     }
-    public Vector2d toUnitVector(){
+
+    public Vector2d toUnitVector() {
         return this.unitVector;
     }
-
-
 
 
 }
