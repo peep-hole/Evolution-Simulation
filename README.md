@@ -1,2 +1,2 @@
-# obiektoweLab
-zadania na laboratoria z programowania obiektowego
+# Evolution Simulator
+Project made for OOP course at AGH UST
